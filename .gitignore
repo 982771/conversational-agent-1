@@ -4,3 +4,5 @@ node_modules
 .env.js
 npm-debug.log
 coverage
+.training/classifier_id
+.training/dialog_id

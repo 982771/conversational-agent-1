@@ -10,8 +10,8 @@ declared-services:
 applications:
 - services:
   - dialog-service
-  - natural-language-classifier-standard
-  name: conversational-agent-application-starter-kit
+  - classifier-service
+  name: conversational-agent-application-hackathon
   command: npm start
   path: .
   memory: 512M

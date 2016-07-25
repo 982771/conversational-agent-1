@@ -25,6 +25,7 @@ var DISCOVER_URL = 'http://api.themoviedb.org/3/discover/movie';
 var GENRE_URL = 'http://api.themoviedb.org/3/genre/movie/list';
 var POSTER_BASE_URL = 'http://image.tmdb.org/t/p/w300/';
 var YOUTUBE_TRAILER_URL = 'https://www.youtube.com/embed/%s?controls=0&amp;showinfo=0';
+var ACTOR_URL = 'http://api.tmdb.org/3/search/person';
 var TMDB_PAGE_SIZE = 20;
 var RESULT_SIZE = 10;
 
@@ -85,6 +86,7 @@ function getPoster(movie) {
     return '';
 }
 
+
 /**
  * Returns the genre id based on a genre name and the genres list
  * @param  {[type]} name   The genre name: Comedy, Drama, Horror,...
@@ -103,6 +105,23 @@ module.exports = function(key) {
     qs: {api_key: key}
   });
 
+  /*Function To Get Actor Id By Providing Actor Name
+*/
+function getActorById(name){
+  var actor_query = { query : name};
+  var actor_id = "";
+
+  tmdbRequest({ url: ACTOR_URL, qs: actor_query, json:true }, function(err, res, body) {
+    if (err)
+      return callback(err);
+
+    console.log("body.results[0].id: " + body.results[0].id);
+    actor_id = body.results[0].id;
+  
+  });
+  return actor_id;
+}
+
   // initialize the genres array
   var genres = [];
   tmdbRequest(GENRE_URL, function(err, resp, body) {
@@ -112,20 +131,70 @@ module.exports = function(key) {
 
 
   return {
+    
+    /*Function To Get Actor Id By Providing Actor Name
+    */
+    searchActorId: function(params, callback){
+
+      var actor_query = { query : params};
+      var actor_id = "";
+
+      tmdbRequest({ url: ACTOR_URL, qs: actor_query, json:true }, function(err, res, body) {
+        if (err)
+          return callback(err);
+
+        if (body.results !== null && body.results !== undefined)
+        {
+          if (body.results[0] !== null && body.results[0] !== undefined)
+          {
+            console.log("body.results[0].id: " + body.results[0].id);
+            actor_id = body.results[0].id;
+          
+            return callback(null, actor_id);        
+          }
+          else
+            return callback(null, "");        
+        }
+        else
+          return callback(null, "");        
+
+      });     
+    },
+
     /**
      * Search for movies based on the parameters provided
      * by the user during the dialog
      */
-    searchMovies: function(params, callback) {
-      var today = moment().format('YYYY-MM-DD');
-      var lastMonth = moment().month(-1).format('YYYY-MM-DD');
-      var next6Months = moment().month(6).format('YYYY-MM-DD');
+     
+    searchMovies: function(params, actor_id, callback) {
+      console.log("actorId: " + actor_id);      
+      console.log("typeof params.release_year: " + params.release_year + " " 
+        + Number.isNaN(Number(params.release_year)));
 
-      var query = {
-        sort_by: 'popularity.desc',
-        'primary_release_date.gte': (params.recency === 'current' ?  lastMonth : today),
-        'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)
-      };
+      if (params.release_year !== "")
+      {
+        var query = {
+          sort_by: 'popularity.desc',
+          primary_release_year: params.release_year
+        }; 
+      }
+      else /*if (!params.release_year !== "")*/
+      {        
+        var today = moment().format('YYYY-MM-DD');
+        var lastMonth = moment().month(-1).format('YYYY-MM-DD');
+        var next6Months = moment().month(6).format('YYYY-MM-DD');
+
+        var query = {
+          sort_by: 'popularity.desc',
+          'primary_release_date.gte': (params.recency === 'current' ?  lastMonth : today),
+          'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)
+        };
+      }
+
+      if(actor_id !== "")
+      {
+        query.with_cast = actor_id;
+      }
 
       // ratings: R, G, PG, PG-13
       if (params.rating) {

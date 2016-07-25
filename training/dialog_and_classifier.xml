@@ -7,7 +7,7 @@
                     <item>What can I call you?</item>
                     <item>What's your name?</item>
                 </prompt>
-                <getUserInput id="getUserInput_2508591">
+                <getUserInput id="getUserInput_2508591">                    
                     <input isAutoLearnCandidate="true"
                         isRelatedNodeCandidate="true" comment="$ movies&#xa;$ want to see something&#xa;$ planning to go see&#xa;$ planning to go to the&#xa;$ going out to see&#xa;$ planning to see&#xa;$ want to go see&#xa;$ thinking of seeing&#xa;$ thinking we want to see&#xa;$ what do you recommend&#xa;$ can you recommend something&#xa;$ what are your recommendations">
                         <grammar>
@@ -15,11 +15,15 @@
                             <item>$ (GENRE)={Genre_Preference}</item>
                             <item>$ (CERTIFICATION)={Certification_Preference}</item>
                             <item>$ (RECENCY)={Recency_Preference}</item>
+                            <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                             <item>$ movies</item>
                         </grammar>
                         <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                         <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                        <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
                         <action varName="Topic" operator="SET_TO">movies</action>
                         <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                         <goto ref="search_2414738"/>
@@ -118,11 +122,12 @@
                 </getUserInput>
                 <output id="output_2508831">
                     <prompt selectionType="RANDOM">
-                        <item>Would you like to find a movie that's now playing or coming soon?</item>
+                        <item>Would you like to find a movie that's now playing or coming soon or related to a star?</item>
                     </prompt>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                     <action varName="Class2" operator="SET_TO_BLANK"/>
-                    <action varName="Class1" operator="SET_TO_BLANK"/>
+                    <action varName="Class1" operator="SET_TO_BLANK"/>                    
+
                     <goto ref="getUserInput_2449875"/>
                 </output>
             </output>
@@ -716,12 +721,13 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                 <input isAutoLearnCandidate="true"
                     isRelatedNodeCandidate="true" comment="LookupActors *&#xa;I want to search for actors&#xa;I want to find movie actors&#xa;search movies by actor&#xa;i'm interested in actors&#xa;search for cast members&#xa;$ look up actors&#xa;$ look up an actor&#xa;$ lookup actors&#xa;$ lookup actor&#xa;$ search for actors&#xa;$ search by actor&#xa;$ find actors&#xa;$ find an actor&#xa;$ looking for an actor&#xa;$ interested in actors&#xa;$ look up cast&#xa;$ look up cast members&#xa;$ serach for cast&#xa;$ search for cast members&#xa;$ find cast&#xa;$ find cast members">
                     <grammar>
-                        <item>LookupActors</item>
+                        <!-- <item>LookupActors</item> -->
                         <item>I want to look up actors</item>
                         <item>look up actors</item>
-                        <item>* LookupActors</item>
+                        <!-- <item>* LookupActors</item> -->
                     </grammar>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
+                    <goto ref=""/>
                     <output>
                         <prompt selectionType="RANDOM">
                             <item>I'm afraid I can't look up cast members.</item>
@@ -732,10 +738,10 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                 <input isAutoLearnCandidate="true"
                     isRelatedNodeCandidate="true" comment="LookupDirectors *&#xa;I want to search for directors&#xa;search for directors&#xa;I'm interested in directors&#xa;I want to find a director&#xa;search movies by director&#xa;$ look up directors&#xa;$ look up director&#xa;$ lookup directors&#xa;$ lookup director&#xa;$ search for directors&#xa;$ search by director&#xa;$ find directors&#xa;$ find a director&#xa;$ looking for a director&#xa;$ interested in directors">
                     <grammar>
-                        <item>LookupDirectors</item>
+                        <!-- <item>LookupDirectors</item> -->
                         <item>I want to look up directors</item>
                         <item>look up directors</item>
-                        <item>* LookupDirectors</item>
+                       <!--  <item>* LookupDirectors</item> -->
                     </grammar>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                     <output>
@@ -852,6 +858,10 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         <item>I want to search for movies</item>
                         <item>search for movies</item>
                         <item>* SearchMovies</item>
+                        <item>$ (RECENCY)={Recency_Preference}</item>
+                        <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                        <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                        <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                     </grammar>
                     <action varName="Topic" operator="SET_TO">movies</action>
                     <action varName="Greeting_Count" operator="SET_TO">0</action>
@@ -861,6 +871,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                     <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                    <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                    <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
                     <action varName="Node_Class" operator="SET_TO">movies</action>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                     <input id="input_2503411">
@@ -887,8 +899,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <function>
                                 <script name="CalculateTimeDiff">Name=CalculateTimeDiff
 
-StartTime={DateTime_Current}
-EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
+                                    StartTime={DateTime_Current}
+                                    EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                 <output>
                                     <prompt/>
                                     <action
@@ -938,15 +950,23 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                         <action varName="Certification_Preference" operator="SET_TO">G</action>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <goto ref="input_2443841"/>
+
                     </input>
                     <input id="input_2443841">
                         <grammar>
                             <item>Recency</item>
                             <item>$ (RECENCY)={Recency_Preference}</item>
+                            <item>$ movies in {Recency_Preference}</item>
+                            <item>$ in {Recency_Preference}</item>
+                            <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                         </grammar>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                        <goto ref="input_2459178"/>
+                        <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                        <!-- <goto ref="input_2459178"/> -->
+                        <goto ref="input_2459179"/>
                     </input>
                     <input id="input_2459178">
                         <grammar>
@@ -955,14 +975,67 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                             <item>$ near me</item>
                         </grammar>
                         <action varName="ZIP_Code_Preference" operator="SET_TO">{ZIP_Code_Preference.source}</action>
+                        <!-- <goto ref="input_2459179"/> -->
                         <goto ref="profileCheck_2503330"/>
                     </input>
+                    <input id="input_2459179">
+                        <grammar>                            
+                            <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item> 
+                            <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item> 
+                            <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>        
+                            <item>$ Cast</item>
+                            <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Cast is (DYNAMIC_DATA)={Cast_Name}</item>                    
+                            <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                            <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                            <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>  
+                            <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                        </grammar>
+                        <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                        <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                        <action varName="Node_Class" operator="SET_TO">movies</action>
+                        <!-- <goto ref="input_2443841"/> -->                        
+                        <!-- <goto ref="profileCheck_2503330"/> -->                        
+                        <goto ref="output_2456875"/>
+                    </input>
+
                     <if id="profileCheck_2449907">
                         <cond varName="Recency_Preference" operator="IS_BLANK"/>
-                        <output id="output_2449874">
+                        <output id="output_2449874">                           
                             <prompt selectionType="RANDOM">
-                                <item>Something that's now playing or coming soon?</item>
-                            </prompt>
+                                <if>
+                                <cond varName="Cast_Name" operator="IS_BLANK"/>
+                                    <item>Something that's now playing or coming soon or
+                                            related to a star?
+                                    </item>
+                                </if>
+                                <if>
+                                <cond varName="Cast_Name" operator="HAS_VALUE"/>
+                                    <item>Something that's now playing or coming soon 
+                                            related to {Cast_Name}?
+                                    </item>
+                                </if>
+                            </prompt>                          
                             <getUserInput id="getUserInput_2449875">
                                 <input>
                                     <grammar>
@@ -980,8 +1053,14 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     <grammar>
                                     <item>how recent</item>
                                     <item>$ (RECENCY)={Recency_Preference}</item>
+                                    <item>$ movies in {Recency_Preference}</item>
+                                    <item>$ in {Recency_Preference}</item>
+                                    <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                                     </grammar>
                                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                                    <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
                                     <action varName="Current_Index" operator="SET_TO">0</action>
                                     <goto ref="profileCheck_2449894"/>
                                 </input>
@@ -1060,7 +1139,158 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     </prompt>
                                     <goto ref="input_2530402"/>
                                     </output>
+                                </input>                                
+
+                                <input>
+                                    <grammar>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast</item>
+                                    <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast is (DYNAMIC_DATA)={Cast_Name}</item>                    
+                                    <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    </grammar>
+                                    <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                                    <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                                    <goto ref="profileCheck_2449907"/>
                                 </input>
+
+                                <input>
+                                    <grammar>
+                                        <item>related to a star</item>
+                                        <item>related to a cast</item>
+                                        <!-- <item>* actor</item> -->
+                                        <item>$ star</item>                                
+                                        <item>$ cast</item>                                
+                                        <item>$ actor</item>                                
+                                    </grammar>
+                                    <output>
+                                        <prompt>
+                                            <item>Which star are you reffering to?</item>
+                                        </prompt>
+                                        <getUserInput>
+                                            <input>
+                                                <grammar>
+                                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item>   
+                                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                                    <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>      
+                                                    <item>$ Cast</item>
+                                                    <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Cast is (DYNAMIC_DATA)={Cast_Name}</item>                    
+                                                    <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                                    <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                                </grammar>   
+                                                <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                                                <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                                                <goto ref="profileCheck_2449907"/>
+                                                <!-- <output>
+                                                    <prompt>
+                                                        <item>{Cast_Name}</item>
+                                                    </prompt>
+                                                </output> -->
+                                            </input>
+                                        </getUserInput>
+
+                                        <goto ref="promptUser"/>
+                                    </output>
+                                    <output id="promptUser">
+                                        <prompt>
+                                            <item>Okay, Now would you like to find a movie that's now playing or coming soon related to {Cast_Name}</item>
+                                        </prompt>  
+                                        
+                                        <goto ref="getUserInput_2449875"/>                          
+                                    </output>
+                                </input> 
+
+                                <input>
+                                    <grammar>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast</item>
+                                    <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast is (DYNAMIC_DATA)={Cast_Name}</item>                    
+                                    <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    </grammar>   
+                                    <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                                    <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                                    <goto ref="profileCheck_2449907"/>
+                                    <!-- <output>
+                                        <prompt>
+                                            <item>{Cast_Name}</item>
+                                        </prompt>
+                                    </output> -->
+                                </input>
+
                                 <goto ref="search_2414738"/>
                             </getUserInput>
                         </output>
@@ -1076,11 +1306,11 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                 <output>
                                     <prompt selectionType="RANDOM">
                                     <item>&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Comedy&lt;/mct:input&gt;&lt;/b&gt;. Make me laugh!&lt;br&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Romance&lt;/mct:input&gt;&lt;/b&gt;, baby!&lt;br&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Horror&lt;/mct:input&gt;&lt;/b&gt;, I'm in the mood to be scared.&lt;br&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Children's&lt;/mct:input&gt;&lt;/b&gt;, let's keep it friendly.&lt;br&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Action&lt;/mct:input&gt;&lt;/b&gt;! I love a good chase scene.&lt;br&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;No Preference&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;</item>
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Romance&lt;/mct:input&gt;&lt;/b&gt;, baby!&lt;br&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Horror&lt;/mct:input&gt;&lt;/b&gt;, I'm in the mood to be scared.&lt;br&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Children's&lt;/mct:input&gt;&lt;/b&gt;, let's keep it friendly.&lt;br&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;Action&lt;/mct:input&gt;&lt;/b&gt;! I love a good chase scene.&lt;br&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;No Preference&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;</item>
                                     </prompt>
                                     <goto ref="getUserInput_2443778"/>
                                 </output>
@@ -1240,10 +1470,10 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                 <output>
                                     <prompt selectionType="RANDOM">
                                     <item>&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;G&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;PG&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;PG-13&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;R&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
-&lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;No Preference&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;</item>
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;PG&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;PG-13&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;R&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;
+                                    &lt;mct:link&gt;&lt;b&gt;&lt;mct:input&gt;No Preference&lt;/mct:input&gt;&lt;/b&gt;&lt;/mct:link&gt;</item>
                                     </prompt>
                                     <goto ref="getUserInput_2443780"/>
                                 </output>
@@ -1299,7 +1529,8 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                                     <action varName="Page" operator="SET_TO">new</action>
                                     <action varName="Search_Now" operator="SET_TO_NO"/>
-                                    <goto ref="output_2456875"/>
+                                    <!-- <goto ref="output_2456875"/> -->
+                                    <goto ref="profileCheck_2449896"/>
                                 </input>
                                 <input>
                                     <grammar>
@@ -1332,7 +1563,8 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     </grammar>
                                     <action varName="Current_Index" operator="SET_TO">0</action>
                                     <action varName="Page" operator="SET_TO">new</action>
-                                    <goto ref="output_2456875"/>
+                                    <!-- <goto ref="output_2456875"/> -->
+                                    <goto ref="profileCheck_2449896"/>  
                                 </input>
                                 <input>
                                     <grammar>
@@ -1349,13 +1581,92 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                             </getUserInput>
                         </output>
                     </if>
+
+                    <if id="profileCheck_2449896">
+                        <cond varName="Cast_Name" operator="IS_BLANK"/>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>Do you prefer a certain movie star? </item>
+                            </prompt>                            
+                            <getUserInput id="getUserInput_2443781">
+                                <input>
+                                    <grammar>
+                                    <item>$ No Preference</item>
+                                    <item>$ No * Preference</item>
+                                    <item>$ No star</item>
+                                    <item>$ No cast</item>
+                                    <item>$ No actor</item>
+                                    <item>$ No</item>
+                                    </grammar>
+                                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                    <goto ref="output_2456875"/>        
+                                </input>
+                                <input> 
+                                    <grammar>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item>
+                                    <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast</item>
+                                    <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Cast is (DYNAMIC_DATA)={Cast_Name}</item>                    
+                                    <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                                    <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                                    </grammar>   
+                                    <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                                    <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                                    <action varName="Page" operator="SET_TO">new</action>
+                                    <action varName="Search_Now" operator="SET_TO_NO"/>
+                                    <!-- <goto ref="profileCheck_2449907"/> -->
+                                    <goto ref="output_2456875"/>
+                                </input>
+                                <!-- <input>
+                                    <grammar>
+                                    <item>Rating</item>
+                                    <item>$ (CERTIFICATION)={Certification_Preference}</item>
+                                    </grammar>
+                                    <action varName="Current_Index" operator="SET_TO">0</action>
+                                    <action
+                                    varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                                    <action varName="Page" operator="SET_TO">new</action>
+                                    <action varName="Search_Now" operator="SET_TO_NO"/>
+                                    <goto ref="output_2456875"/>
+                                </input>
+                                -->
+                                <goto ref="search_2414738"/>
+                            </getUserInput>
+                        </output>
+                    </if>
+
                     <output id="output_2456875">
                         <prompt selectionType="RANDOM">
                             <item>Okay.</item>
                         </prompt>
                         <output id="output_2456876">
                             <prompt selectionType="RANDOM">
-                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Rating:"{Certification_Preference}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}"}"</item>
+                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}"}"</item>
                             </prompt>
                             <action varName="Last_Results" operator="SET_TO_NO"/>
                             <action varName="First_Results" operator="SET_TO_NO"/>
@@ -1383,6 +1694,8 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     varName="Genre_Preference" operator="SET_TO_BLANK"/>
                                     <action
                                     varName="Recency_Preference" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </input>
                                     <goto ref="input_2460509"/>
@@ -1467,6 +1780,8 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     varName="Terminal_Exchange" operator="SET_TO_BLANK"/>
                                     <action
                                     varName="Topic" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <goto ref="output_2414737"/>
                                     </input>
                                     <input>
@@ -1699,6 +2014,8 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     varName="Genre_Preference" operator="SET_TO_BLANK"/>
                                     <action
                                     varName="Recency_Preference" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </output>
                                     </input>
@@ -4887,6 +5204,11 @@ border-color:#000000;
                 <var name="Request_Success" type="YESNO" description="Did the user find what s/he was looking for?"/>
                 <var name="Terminal_Exchange" type="YESNO"
                     initValue="No" description="Has the system already said goodbye?"/>
+
+                <!-- <var name="Cast_Name" type="TEXT" initValue="Xavier"/> -->
+                <var name="Cast_Name" type="TEXT" initValue=""/>
+                <var name="Release_Year" type="NUMBER" initValue="" description="Year of Release for the movie."/>
+
             </var_folder>
             <var_folder name="Movie Search" type="VAR">
                 <var name="Display_Trailer" type="YESNO" initValue="No"/>
@@ -4969,91 +5291,91 @@ var globalFilterRules = &amp;quot;&amp;quot;;
 &amp;lt;style type=&amp;quot;text/css&amp;quot;&amp;gt;
 body
 {
-	margin-left: 75px;
+    margin-left: 75px;
 }
 
 .title
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 14px;
-	font-weight: bold;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .subtitle
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 13px;
-	font-weight: none;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 13px;
+    font-weight: none;
 }
 
 .section
 {
-	margin-top: 60px;
-	width: 800px;
+    margin-top: 60px;
+    width: 800px;
 }
 
 
 .sectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	width: 100%;
-	padding: 10px 10px 10px 10px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    width: 100%;
+    padding: 10px 10px 10px 10px;
 }
 
 .subsection
 {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .subsectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    padding: 3px 3px 3px 3px;
 }
 
 .label
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 300px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
-	
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 300px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
+    
 }
 
 .value
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 50px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 50px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .xaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .yaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 &amp;lt;/style&amp;gt;
@@ -5090,20 +5412,20 @@ var tableSetTemplateOI= &amp;quot;&amp;lt;table class=subsection&amp;gt;&amp;lt;
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Chat Uptake&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Chat Uptake&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
+    &amp;lt;td&amp;gt;
 &amp;lt;%
-	var conversionSet = VALUE_SET(	&amp;quot;Visitors and chats&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-				totalWebsiteVisitors, &amp;quot;1&amp;quot;, &amp;quot;Website visitors&amp;quot;, 
-				numChats, &amp;quot;1&amp;quot;, &amp;quot;Website visitors who chatted to the CyberTwin&amp;quot;, 
-				FORMAT_NUMBER(MULTIPLY(DIVIDE(numChats, totalWebsiteVisitors), &amp;quot;100&amp;quot;), &amp;quot;##.##&amp;quot;), &amp;quot;0&amp;quot;, &amp;quot;Chat Uptake&amp;quot;);
+    var conversionSet = VALUE_SET(  &amp;quot;Visitors and chats&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+                totalWebsiteVisitors, &amp;quot;1&amp;quot;, &amp;quot;Website visitors&amp;quot;, 
+                numChats, &amp;quot;1&amp;quot;, &amp;quot;Website visitors who chatted to the CyberTwin&amp;quot;, 
+                FORMAT_NUMBER(MULTIPLY(DIVIDE(numChats, totalWebsiteVisitors), &amp;quot;100&amp;quot;), &amp;quot;##.##&amp;quot;), &amp;quot;0&amp;quot;, &amp;quot;Chat Uptake&amp;quot;);
 
-	PRINT_TEMPLATE(conversionSet, tableSetTemplate1);
+    PRINT_TEMPLATE(conversionSet, tableSetTemplate1);
 %&amp;gt;
-		
-	&amp;lt;/td&amp;gt;
+        
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
@@ -5111,46 +5433,46 @@ var tableSetTemplateOI= &amp;quot;&amp;lt;table class=subsection&amp;gt;&amp;lt;
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
 
-	&amp;lt;td class=sectionHeading&amp;gt;Engagement&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Engagement&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
+    &amp;lt;td&amp;gt;
 &amp;lt;%
-	var chatVolumeSet = VALUE_SET(&amp;quot;Chat Volume&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-		numChats, &amp;quot;1&amp;quot;, &amp;quot;Total Chats&amp;quot;, 
-		numEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;Engaging Chats&amp;quot;, 
-		numNonEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;NonEngaging Chats&amp;quot;);
+    var chatVolumeSet = VALUE_SET(&amp;quot;Chat Volume&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+        numChats, &amp;quot;1&amp;quot;, &amp;quot;Total Chats&amp;quot;, 
+        numEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;Engaging Chats&amp;quot;, 
+        numNonEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;NonEngaging Chats&amp;quot;);
 
-	PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
-	
-
-
-	var timeChatsSet = VALUE_SET(	&amp;quot;Chat Time&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-				CHATSTATS_TIME_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg minutes&amp;quot;, 
-				CHATSTATS_TIME_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min minutes&amp;quot;, 
-				CHATSTATS_TIME_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max minutes&amp;quot;, 
-				CHATSTATS_TIME_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total minutes&amp;quot;);
-
-	PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
-
-	PRINT_TEMPLATE(CHATSTATS_TIME_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);	
+    PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
+    
 
 
+    var timeChatsSet = VALUE_SET(   &amp;quot;Chat Time&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+                CHATSTATS_TIME_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg minutes&amp;quot;, 
+                CHATSTATS_TIME_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min minutes&amp;quot;, 
+                CHATSTATS_TIME_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max minutes&amp;quot;, 
+                CHATSTATS_TIME_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total minutes&amp;quot;);
+
+    PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
+
+    PRINT_TEMPLATE(CHATSTATS_TIME_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);   
 
 
-	var msgChatsSet = VALUE_SET(	&amp;quot;Chat Messages&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-				CHATSTATS_MSG_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg messages&amp;quot;, 
-				CHATSTATS_MSG_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min messages&amp;quot;, 
-				CHATSTATS_MSG_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max messages&amp;quot;, 
-				CHATSTATS_MSG_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total messages&amp;quot;);
-
-	PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
-
-	PRINT_TEMPLATE(CHATSTATS_MSG_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);	
-	%&amp;gt;
 
 
-	&amp;lt;/td&amp;gt;
+    var msgChatsSet = VALUE_SET(    &amp;quot;Chat Messages&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+                CHATSTATS_MSG_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg messages&amp;quot;, 
+                CHATSTATS_MSG_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min messages&amp;quot;, 
+                CHATSTATS_MSG_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max messages&amp;quot;, 
+                CHATSTATS_MSG_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total messages&amp;quot;);
+
+    PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
+
+    PRINT_TEMPLATE(CHATSTATS_MSG_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);    
+    %&amp;gt;
+
+
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
@@ -5158,50 +5480,50 @@ var tableSetTemplateOI= &amp;quot;&amp;lt;table class=subsection&amp;gt;&amp;lt;
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Feedback&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Feedback&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
+    &amp;lt;td&amp;gt;
 &amp;lt;%
-	var feedbackInfoSet = VALUE_SET(&amp;quot;Feedback Info&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;&amp;quot;, FEEDBACK_NUM(),&amp;quot;1&amp;quot;,&amp;quot;Number of users who gave feedback&amp;quot;);
-	PRINT_TEMPLATE(feedbackInfoSet, tableSetTemplate1);
+    var feedbackInfoSet = VALUE_SET(&amp;quot;Feedback Info&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;&amp;quot;, FEEDBACK_NUM(),&amp;quot;1&amp;quot;,&amp;quot;Number of users who gave feedback&amp;quot;);
+    PRINT_TEMPLATE(feedbackInfoSet, tableSetTemplate1);
 
-	PRINT_TEMPLATE(FEEDBACK_SET(&amp;quot;1&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
+    PRINT_TEMPLATE(FEEDBACK_SET(&amp;quot;1&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
 %&amp;gt;
-	&amp;lt;/td&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Deflection&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Deflection&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
+    &amp;lt;td&amp;gt;
 &amp;lt;%
-	var numFeedbackPhonedTheCallCentre = FEEDBACK_VALUE(&amp;quot;2&amp;quot;, &amp;quot;Phoned the call center&amp;quot;);
-	var numFeedbackSentAnEmail = FEEDBACK_VALUE(&amp;quot;2&amp;quot;, &amp;quot;Send an email&amp;quot;);
+    var numFeedbackPhonedTheCallCentre = FEEDBACK_VALUE(&amp;quot;2&amp;quot;, &amp;quot;Phoned the call center&amp;quot;);
+    var numFeedbackSentAnEmail = FEEDBACK_VALUE(&amp;quot;2&amp;quot;, &amp;quot;Send an email&amp;quot;);
 
-	var sumFeedback = SUM(numFeedbackPhonedTheCallCentre, numFeedbackSentAnEmail);
-	var normFeedback = DIVIDE(sumFeedback, FEEDBACK_NUM());
-	var percFeedback = MULTIPLY(normFeedback, &amp;quot;100&amp;quot;);
+    var sumFeedback = SUM(numFeedbackPhonedTheCallCentre, numFeedbackSentAnEmail);
+    var normFeedback = DIVIDE(sumFeedback, FEEDBACK_NUM());
+    var percFeedback = MULTIPLY(normFeedback, &amp;quot;100&amp;quot;);
 
-	var chatsDeflected = MULTIPLY(numChats, normFeedback);
-	var savings = MULTIPLY(chatsDeflected, costPerContactCentreContact);
+    var chatsDeflected = MULTIPLY(numChats, normFeedback);
+    var savings = MULTIPLY(chatsDeflected, costPerContactCentreContact);
 
-	var contactCentreSavingsSet = VALUE_SET(	&amp;quot;Contact center savings with CyberTwin&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;&amp;quot;, 
-					numChats, &amp;quot;1&amp;quot;, &amp;quot;Number of chats&amp;quot;, 
-					percFeedback, &amp;quot;0&amp;quot;, &amp;quot;% would have contacted the contact center&amp;quot;, 
-					chatsDeflected, &amp;quot;1&amp;quot;, &amp;quot;Chats deflected&amp;quot;, 
-					costPerContactCentreContact, &amp;quot;5&amp;quot;, &amp;quot;Cost per contact center contact&amp;quot;, 
-					savings, &amp;quot;5&amp;quot;, &amp;quot;&amp;lt;b&amp;gt;Total Cost Deflected by CyberTwin&amp;lt;/b&amp;gt;&amp;quot;);
+    var contactCentreSavingsSet = VALUE_SET(    &amp;quot;Contact center savings with CyberTwin&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;&amp;quot;, 
+                    numChats, &amp;quot;1&amp;quot;, &amp;quot;Number of chats&amp;quot;, 
+                    percFeedback, &amp;quot;0&amp;quot;, &amp;quot;% would have contacted the contact center&amp;quot;, 
+                    chatsDeflected, &amp;quot;1&amp;quot;, &amp;quot;Chats deflected&amp;quot;, 
+                    costPerContactCentreContact, &amp;quot;5&amp;quot;, &amp;quot;Cost per contact center contact&amp;quot;, 
+                    savings, &amp;quot;5&amp;quot;, &amp;quot;&amp;lt;b&amp;gt;Total Cost Deflected by CyberTwin&amp;lt;/b&amp;gt;&amp;quot;);
 
-	PRINT_TEMPLATE(contactCentreSavingsSet, tableSetTemplate2);
+    PRINT_TEMPLATE(contactCentreSavingsSet, tableSetTemplate2);
 %&amp;gt;
 
 
-	&amp;lt;/td&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
@@ -5209,83 +5531,83 @@ var tableSetTemplateOI= &amp;quot;&amp;lt;table class=subsection&amp;gt;&amp;lt;
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Performance&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Performance&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
-		&amp;lt;table&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=xaxislabel&amp;gt;Performance Indicator&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;CyberTwin&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;Live Human Chat&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;Live Human Phone&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Accuracy - detecting questions&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;68% customer satisfaction&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Accuracy - giving correct answers&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;60-75%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;81% first contact reolution rate&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Quality answers - good substantive answers that represent the brand well and reduce calls to contact centre&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Consistent answers&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;60%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;81% first contact reolution rate&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Response time - per answer&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt; 1 sec&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;1-3 minutes&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;62% in less than 10 sec&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Length of chats - avg. time&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(CHATSTATS_TIME_AVG(),&amp;quot;##.#&amp;quot;);%&amp;gt;mins&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Length of chats - avg. messages&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(CHATSTATS_MSG_AVG(),&amp;quot;##.#&amp;quot;);%&amp;gt;msgs&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Chats cut short&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;15%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;14% abandoned, 19% unresolved on first call&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Abandoned calls&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;14%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Agent utilisation&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%, 24 hrs a day&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;59%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;	
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;# Concurrent sessions&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;thousands per server&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;1&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;	
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Staff attrition&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;24%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;/table&amp;gt;
+    &amp;lt;td&amp;gt;
+        &amp;lt;table&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=xaxislabel&amp;gt;Performance Indicator&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;CyberTwin&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;Live Human Chat&amp;lt;/td&amp;gt;&amp;lt;td class=yaxislabel&amp;gt;Live Human Phone&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Accuracy - detecting questions&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;68% customer satisfaction&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Accuracy - giving correct answers&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;60-75%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;81% first contact reolution rate&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Quality answers - good substantive answers that represent the brand well and reduce calls to contact centre&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Consistent answers&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;60%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;81% first contact reolution rate&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Response time - per answer&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt; 1 sec&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;1-3 minutes&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;62% in less than 10 sec&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Length of chats - avg. time&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(CHATSTATS_TIME_AVG(),&amp;quot;##.#&amp;quot;);%&amp;gt;mins&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Length of chats - avg. messages&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(CHATSTATS_MSG_AVG(),&amp;quot;##.#&amp;quot;);%&amp;gt;msgs&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Chats cut short&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;15%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;14% abandoned, 19% unresolved on first call&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Abandoned calls&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;14%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Agent utilisation&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;100%, 24 hrs a day&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;59%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;    
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;# Concurrent sessions&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;thousands per server&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;1&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt; 
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Staff attrition&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;0%&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;-&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;24%&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;/table&amp;gt;
 
 /*
-		&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;
-		
-		&amp;lt;table&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Overall Accuracy&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;/table&amp;gt;
+        &amp;lt;br&amp;gt;&amp;lt;br&amp;gt;
+        
+        &amp;lt;table&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Overall Accuracy&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;/table&amp;gt;
 */
-	&amp;lt;/td&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Learning About Users&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Learning About Users&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
-	
+    &amp;lt;td&amp;gt;
+    
 &amp;lt;%
-	var foldersSet = HIT_COUNT_TOP(&amp;quot;FOLDER&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Popular Topics of Interest&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Topic&amp;quot;);
-	PRINT_GRAPH_TEMPLATE(foldersSet, &amp;quot;PIE&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetTemplate2);
-	
-	var questionSet = HIT_COUNT_TOP(&amp;quot;INPUT&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Frequently Asked Questions&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Question&amp;quot;);
+    var foldersSet = HIT_COUNT_TOP(&amp;quot;FOLDER&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Popular Topics of Interest&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Topic&amp;quot;);
+    PRINT_GRAPH_TEMPLATE(foldersSet, &amp;quot;PIE&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetTemplate2);
+    
+    var questionSet = HIT_COUNT_TOP(&amp;quot;INPUT&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Frequently Asked Questions&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Question&amp;quot;);
 PRINT_TEMPLATE(questionSet, tableSetTemplate3);
 
 
-	var newSet = foldersSet(questionSet);
-	PRINT_TEMPLATE(newSet, tableSetTemplate2);
+    var newSet = foldersSet(questionSet);
+    PRINT_TEMPLATE(newSet, tableSetTemplate2);
 
-	var 1 = HIT_COUNT_TOP(&amp;quot;FOLDER&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Popular Topics of Interest&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Topic&amp;quot;);
-	var 2 = HIT_COUNT_TOP(&amp;quot;INPUT&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Frequently Asked Questions&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Question&amp;quot;);
+    var 1 = HIT_COUNT_TOP(&amp;quot;FOLDER&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Popular Topics of Interest&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Topic&amp;quot;);
+    var 2 = HIT_COUNT_TOP(&amp;quot;INPUT&amp;quot;, topHitsNodeIdScope, numTopHits, &amp;quot;Most Frequently Asked Questions&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Question&amp;quot;);
 
 
-	PRINT_TEMPLATE(SOURCE_CLICKS_TOP(numTopHits, &amp;quot;Pages From Which CyberTwin Was Opened&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;URL&amp;quot;),  tableSetTemplate3);
+    PRINT_TEMPLATE(SOURCE_CLICKS_TOP(numTopHits, &amp;quot;Pages From Which CyberTwin Was Opened&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;URL&amp;quot;),  tableSetTemplate3);
 
-	PRINT_TEMPLATE(PAGE_LOADS_TOP(numTopHits, &amp;quot;Pages Loaded By CyberTwin During Chat&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;URL&amp;quot;), tableSetTemplate3);
+    PRINT_TEMPLATE(PAGE_LOADS_TOP(numTopHits, &amp;quot;Pages Loaded By CyberTwin During Chat&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;URL&amp;quot;), tableSetTemplate3);
 
 
 %&amp;gt;
 
 &amp;lt;%
-	PRINT_TEMPLATE(HITNODE_RULE_SETS(), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
+    PRINT_TEMPLATE(HITNODE_RULE_SETS(), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
 
-	PRINT_TEMPLATE(PROFILEVALUE_RULE_SETS(), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
+    PRINT_TEMPLATE(PROFILEVALUE_RULE_SETS(), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);
 
 /*
-	PRINT_TEMPLATE(HITNODE_RULE_FOLDER_SET(&amp;quot;4984&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;Label&amp;quot;, &amp;quot;0&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate1);
+    PRINT_TEMPLATE(HITNODE_RULE_FOLDER_SET(&amp;quot;4984&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;Label&amp;quot;, &amp;quot;0&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate1);
 
-	PRINT_TEMPLATE(HITNODE_RULE_VALUESET(&amp;quot;34 35 36 37 38&amp;quot;, &amp;quot;Topics of Interest&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;Label&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate1);
+    PRINT_TEMPLATE(HITNODE_RULE_VALUESET(&amp;quot;34 35 36 37 38&amp;quot;, &amp;quot;Topics of Interest&amp;quot;, &amp;quot;%&amp;quot;, &amp;quot;Label&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate1);
 */
 %&amp;gt;
-	&amp;lt;/td&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
@@ -5308,111 +5630,111 @@ var globalFilterRules = &amp;quot;&amp;quot;;
 &amp;lt;style type=&amp;quot;text/css&amp;quot;&amp;gt;
 body
 {
-	margin-left: 75px;
+    margin-left: 75px;
 }
 
 .title
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 14px;
-	font-weight: bold;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .subtitle
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 13px;
-	font-weight: none;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 13px;
+    font-weight: none;
 }
 
 .section
 {
-	margin-top: 60px;
-	width: 800px;
+    margin-top: 60px;
+    width: 800px;
 }
 
 
 .sectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	width: 100%;
-	padding: 10px 10px 10px 10px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    width: 100%;
+    padding: 10px 10px 10px 10px;
 }
 
 .subsection
 {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .subsectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    padding: 3px 3px 3px 3px;
 }
 
 .label
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 300px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
-	
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 300px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
+    
 }
 
 
 .simplelabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
-	
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
+    
 }
 
 .value
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 50px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 50px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .simplevalue
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .xaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .yaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 &amp;lt;/style&amp;gt;
@@ -5451,81 +5773,81 @@ var tableSetGraphTemplate4 = &amp;quot;&amp;lt;table class=subsection&amp;gt;&am
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
 
-	&amp;lt;td class=sectionHeading&amp;gt;Engagement&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Engagement&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
+    &amp;lt;td&amp;gt;
 &amp;lt;%
-	var chatVolumeSet = VALUE_SET(&amp;quot;Chat Volume&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-		numChats, &amp;quot;1&amp;quot;, &amp;quot;Total Chats&amp;quot;, 
-		numEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;Engaging Chats&amp;quot;, 
-		numNonEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;NonEngaging Chats&amp;quot;);
+    var chatVolumeSet = VALUE_SET(&amp;quot;Chat Volume&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+        numChats, &amp;quot;1&amp;quot;, &amp;quot;Total Chats&amp;quot;, 
+        numEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;Engaging Chats&amp;quot;, 
+        numNonEngagingChats, &amp;quot;1&amp;quot;, &amp;quot;NonEngaging Chats&amp;quot;);
 
-	PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
-	
-
-
-	var timeChatsSet = VALUE_SET(	&amp;quot;Chat Time&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-				CHATSTATS_TIME_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg minutes&amp;quot;, 
-				CHATSTATS_TIME_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min minutes&amp;quot;, 
-				CHATSTATS_TIME_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max minutes&amp;quot;, 
-				CHATSTATS_TIME_MEDIAN(), &amp;quot;1&amp;quot;, &amp;quot;Median minutes&amp;quot;,
-				CHATSTATS_TIME_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total minutes&amp;quot;);
-
-	PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
-
-	PRINT_GRAPH_TEMPLATE(CHATSTATS_TIME_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);	
+    PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
+    
 
 
+    var timeChatsSet = VALUE_SET(   &amp;quot;Chat Time&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+                CHATSTATS_TIME_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg minutes&amp;quot;, 
+                CHATSTATS_TIME_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min minutes&amp;quot;, 
+                CHATSTATS_TIME_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max minutes&amp;quot;, 
+                CHATSTATS_TIME_MEDIAN(), &amp;quot;1&amp;quot;, &amp;quot;Median minutes&amp;quot;,
+                CHATSTATS_TIME_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total minutes&amp;quot;);
+
+    PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
+
+    PRINT_GRAPH_TEMPLATE(CHATSTATS_TIME_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3); 
 
 
-	var msgChatsSet = VALUE_SET(	&amp;quot;Chat Messages&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
-				CHATSTATS_MSG_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg messages&amp;quot;, 
-				CHATSTATS_MSG_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min messages&amp;quot;, 
-				CHATSTATS_MSG_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max messages&amp;quot;, 
-				CHATSTATS_MSG_MEDIAN(), &amp;quot;1&amp;quot;, &amp;quot;Median messages&amp;quot;, 
-				CHATSTATS_MSG_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total messages&amp;quot;);
-
-	PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
-
-	PRINT_GRAPH_TEMPLATE(CHATSTATS_MSG_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);	
-	%&amp;gt;
 
 
-	&amp;lt;/td&amp;gt;
+    var msgChatsSet = VALUE_SET(    &amp;quot;Chat Messages&amp;quot;, &amp;quot;#&amp;quot;, &amp;quot;Measurement&amp;quot;, 
+                CHATSTATS_MSG_AVG(), &amp;quot;1&amp;quot;, &amp;quot;Avg messages&amp;quot;, 
+                CHATSTATS_MSG_MIN(), &amp;quot;1&amp;quot;, &amp;quot;Min messages&amp;quot;, 
+                CHATSTATS_MSG_MAX(), &amp;quot;1&amp;quot;, &amp;quot;Max messages&amp;quot;, 
+                CHATSTATS_MSG_MEDIAN(), &amp;quot;1&amp;quot;, &amp;quot;Median messages&amp;quot;, 
+                CHATSTATS_MSG_TOTAL(), &amp;quot;1&amp;quot;, &amp;quot;Total messages&amp;quot;);
+
+    PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
+
+    PRINT_GRAPH_TEMPLATE(CHATSTATS_MSG_SPREAD(&amp;quot;&amp;quot;,&amp;quot;%&amp;quot;,&amp;quot;Measurement&amp;quot;), &amp;quot;BAR&amp;quot;, &amp;quot;300&amp;quot;, &amp;quot;300&amp;quot;, tableSetGraphTemplate3);  
+    %&amp;gt;
+
+
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
 
 
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;KPIs&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;KPIs&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
-		&amp;lt;table&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Overall Accuracy&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-			&amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
-		&amp;lt;/table&amp;gt;
-	&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;
+        &amp;lt;table&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Overall Accuracy&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(ACCURACY_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;Direct Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Match Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+            &amp;lt;tr&amp;gt;&amp;lt;td class=label&amp;gt;AutoLearn Default Rate&amp;lt;/td&amp;gt;&amp;lt;td class=value&amp;gt;&amp;lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),&amp;quot;##.#%&amp;quot;);%&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+        &amp;lt;/table&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
-	
+    
 &amp;lt;table class=section&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td class=sectionHeading&amp;gt;Input Node Stats&amp;lt;/td&amp;gt;
+    &amp;lt;td class=sectionHeading&amp;gt;Input Node Stats&amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;tr&amp;gt;
-	&amp;lt;td&amp;gt;
-		&amp;lt;% PRINT(INPUT_NODE_STATS(topHitsNodeIdScope, numTopHits)); %&amp;gt;
-	&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;
+        &amp;lt;% PRINT(INPUT_NODE_STATS(topHitsNodeIdScope, numTopHits)); %&amp;gt;
+    &amp;lt;/td&amp;gt;
 &amp;lt;/tr&amp;gt;
 &amp;lt;/table&amp;gt;
-		
+        
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;</script>
         </report>
@@ -5546,91 +5868,91 @@ var globalFilterRules = "";
 &lt;style type="text/css"&gt;
 body
 {
-	margin-left: 75px;
+    margin-left: 75px;
 }
 
 .title
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 14px;
-	font-weight: bold;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .subtitle
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 13px;
-	font-weight: none;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 13px;
+    font-weight: none;
 }
 
 .section
 {
-	margin-top: 60px;
-	width: 800px;
+    margin-top: 60px;
+    width: 800px;
 }
 
 
 .sectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	width: 100%;
-	padding: 10px 10px 10px 10px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    width: 100%;
+    padding: 10px 10px 10px 10px;
 }
 
 .subsection
 {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .subsectionHeading
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 12px;
-	font-weight: bold;
-	background-color: #eeeeee;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eeeeee;
+    padding: 3px 3px 3px 3px;
 }
 
 .label
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 300px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
-	
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 300px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
+    
 }
 
 .value
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: none;
-	width: 50px;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: none;
+    width: 50px;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .xaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 .yaxislabel
 {
-	font-family: verdana, arial, sans-serif; 
-	font-size: 10px;
-	font-weight: bold;
-	background-color: #eeeeff;
-	padding: 3px 3px 3px 3px;
+    font-family: verdana, arial, sans-serif; 
+    font-size: 10px;
+    font-weight: bold;
+    background-color: #eeeeff;
+    padding: 3px 3px 3px 3px;
 }
 
 &lt;/style&gt;
@@ -5673,20 +5995,20 @@ var table3ColTemplateGraph2 = "&lt;table class=subsection&gt;&lt;tr&gt;&lt;td va
 
 &lt;table class=section&gt;
 &lt;tr&gt;
-	&lt;td class=sectionHeading&gt;Chat Uptake&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Chat Uptake&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
+    &lt;td&gt;
 &lt;%
-	var conversionSet = VALUE_SET(	"Visitors and chats", "#", "Measurement", 
-				totalWebsiteVisitors, "1", "Website visitors", 
-				numChats, "1", "Website visitors who chatted to the CyberTwin", 
-				FORMAT_NUMBER(MULTIPLY(DIVIDE(numChats, totalWebsiteVisitors), "100"), "##.##"), "0", "Chat Uptake");
+    var conversionSet = VALUE_SET(  "Visitors and chats", "#", "Measurement", 
+                totalWebsiteVisitors, "1", "Website visitors", 
+                numChats, "1", "Website visitors who chatted to the CyberTwin", 
+                FORMAT_NUMBER(MULTIPLY(DIVIDE(numChats, totalWebsiteVisitors), "100"), "##.##"), "0", "Chat Uptake");
 
-	PRINT_TEMPLATE(conversionSet, tableSetTemplate1);
+    PRINT_TEMPLATE(conversionSet, tableSetTemplate1);
 %&gt;
-		
-	&lt;/td&gt;
+        
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 
@@ -5694,69 +6016,69 @@ var table3ColTemplateGraph2 = "&lt;table class=subsection&gt;&lt;tr&gt;&lt;td va
 &lt;table class=section&gt;
 &lt;tr&gt;
 
-	&lt;td class=sectionHeading&gt;Engagement&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Engagement&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
+    &lt;td&gt;
 &lt;%
-	var chatVolumeSet = VALUE_SET("Chat Volume", "#", "Measurement", 
-		numChats, "1", "Total Chats", 
-		numEngagingChats, "1", "Engaging Chats", 
-		FORMAT_NUMBER(MULTIPLY(DIVIDE(numEngagingChats, numChats),"100"),"##.##"), "0", "% Engaging Chats");
+    var chatVolumeSet = VALUE_SET("Chat Volume", "#", "Measurement", 
+        numChats, "1", "Total Chats", 
+        numEngagingChats, "1", "Engaging Chats", 
+        FORMAT_NUMBER(MULTIPLY(DIVIDE(numEngagingChats, numChats),"100"),"##.##"), "0", "% Engaging Chats");
 
-	PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
-	
-
-
-	var timeChatsSet = VALUE_SET(	"Chat Time", "#", "Measurement", 
-				CHATSTATS_TIME_AVG(), "1", "Avg minutes", 
-				CHATSTATS_TIME_MIN(), "1", "Min minutes", 
-				CHATSTATS_TIME_MAX(), "1", "Max minutes", 
-				CHATSTATS_TIME_MEDIAN(), "1", "Median minutes",
-				CHATSTATS_TIME_TOTAL(), "1", "Total minutes");
-
-	PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
-
-	PRINT_TEMPLATE(CHATSTATS_TIME_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);	
+    PRINT_TEMPLATE(chatVolumeSet, tableSetTemplate1);
+    
 
 
+    var timeChatsSet = VALUE_SET(   "Chat Time", "#", "Measurement", 
+                CHATSTATS_TIME_AVG(), "1", "Avg minutes", 
+                CHATSTATS_TIME_MIN(), "1", "Min minutes", 
+                CHATSTATS_TIME_MAX(), "1", "Max minutes", 
+                CHATSTATS_TIME_MEDIAN(), "1", "Median minutes",
+                CHATSTATS_TIME_TOTAL(), "1", "Total minutes");
+
+    PRINT_TEMPLATE(timeChatsSet, tableSetTemplate1);
+
+    PRINT_TEMPLATE(CHATSTATS_TIME_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);   
 
 
-	var msgChatsSet = VALUE_SET(	"Chat Messages", "#", "Measurement", 
-				CHATSTATS_MSG_AVG(), "1", "Avg messages", 
-				CHATSTATS_MSG_MIN(), "1", "Min messages", 
-				CHATSTATS_MSG_MAX(), "1", "Max messages", 
-				CHATSTATS_MSG_MEDIAN(), "1", "Median messages", 
-				CHATSTATS_MSG_TOTAL(), "1", "Total messages");
-
-	PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
-
-	PRINT_TEMPLATE(CHATSTATS_MSG_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);	
-	
-	
-	
-	/*
-	var chatDUSet = VALUE_SET(	"Dinstinct Users", "#", "Measurement", 
-				CHATSTATS_DISTINCTUSER_NUM(), "1", "Num of distinct users", 
-				CHATSTATS_DISTINCTUSER_AVG(), "1", "Avg chats", 
-				CHATSTATS_DISTINCTUSER_MIN(), "1", "Min chats", 
-				CHATSTATS_DISTINCTUSER_MAX(), "1", "Max chats", 
-				CHATSTATS_DISTINCTUSER_MEDIAN(), "1", "Median chats", 
-				CHATSTATS_DISTINCTUSER_TOTAL(), "1", "Total chats");
-
-	PRINT_TEMPLATE(chatDUSet, tableSetTemplate1);
-
-	PRINT_GRAPH_TEMPLATE(CHATSTATS_DISTINCTUSER_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);
-	*/
-	
-	
-	
-	PRINT_TEMPLATE(CHATSTATS_LOCATION_SPREAD("Location","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);
-	
-	%&gt;
 
 
-	&lt;/td&gt;
+    var msgChatsSet = VALUE_SET(    "Chat Messages", "#", "Measurement", 
+                CHATSTATS_MSG_AVG(), "1", "Avg messages", 
+                CHATSTATS_MSG_MIN(), "1", "Min messages", 
+                CHATSTATS_MSG_MAX(), "1", "Max messages", 
+                CHATSTATS_MSG_MEDIAN(), "1", "Median messages", 
+                CHATSTATS_MSG_TOTAL(), "1", "Total messages");
+
+    PRINT_TEMPLATE(msgChatsSet, tableSetTemplate1);
+
+    PRINT_TEMPLATE(CHATSTATS_MSG_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);    
+    
+    
+    
+    /*
+    var chatDUSet = VALUE_SET(  "Dinstinct Users", "#", "Measurement", 
+                CHATSTATS_DISTINCTUSER_NUM(), "1", "Num of distinct users", 
+                CHATSTATS_DISTINCTUSER_AVG(), "1", "Avg chats", 
+                CHATSTATS_DISTINCTUSER_MIN(), "1", "Min chats", 
+                CHATSTATS_DISTINCTUSER_MAX(), "1", "Max chats", 
+                CHATSTATS_DISTINCTUSER_MEDIAN(), "1", "Median chats", 
+                CHATSTATS_DISTINCTUSER_TOTAL(), "1", "Total chats");
+
+    PRINT_TEMPLATE(chatDUSet, tableSetTemplate1);
+
+    PRINT_GRAPH_TEMPLATE(CHATSTATS_DISTINCTUSER_SPREAD("","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);
+    */
+    
+    
+    
+    PRINT_TEMPLATE(CHATSTATS_LOCATION_SPREAD("Location","%","Measurement"), "BAR", "300", "300", tableSetGraphTemplate3);
+    
+    %&gt;
+
+
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 
@@ -5764,50 +6086,50 @@ var table3ColTemplateGraph2 = "&lt;table class=subsection&gt;&lt;tr&gt;&lt;td va
 
 &lt;table class=section&gt;
 &lt;tr&gt;
-	&lt;td class=sectionHeading&gt;Feedback&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Feedback&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
+    &lt;td&gt;
 &lt;%
-	var feedbackInfoSet = VALUE_SET("Feedback Info","","", FEEDBACK_NUM(),"1","Number of users who gave feedback");
-	PRINT_TEMPLATE(feedbackInfoSet, tableSetTemplate1);
+    var feedbackInfoSet = VALUE_SET("Feedback Info","","", FEEDBACK_NUM(),"1","Number of users who gave feedback");
+    PRINT_TEMPLATE(feedbackInfoSet, tableSetTemplate1);
 
-	PRINT_TEMPLATE(FEEDBACK_SET("1"), "BAR", "300", "300", tableSetGraphTemplate3);
+    PRINT_TEMPLATE(FEEDBACK_SET("1"), "BAR", "300", "300", tableSetGraphTemplate3);
 %&gt;
-	&lt;/td&gt;
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 
 
 &lt;table class=section&gt;
 &lt;tr&gt;
-	&lt;td class=sectionHeading&gt;Deflection&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Deflection&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
+    &lt;td&gt;
 &lt;%
-	var numFeedbackPhonedTheCallCentre = FEEDBACK_VALUE("2", "Phoned the call center");
-	var numFeedbackSentAnEmail = FEEDBACK_VALUE("2", "Send an email");
+    var numFeedbackPhonedTheCallCentre = FEEDBACK_VALUE("2", "Phoned the call center");
+    var numFeedbackSentAnEmail = FEEDBACK_VALUE("2", "Send an email");
 
-	var sumFeedback = SUM(numFeedbackPhonedTheCallCentre, numFeedbackSentAnEmail);
-	var normFeedback = DIVIDE(sumFeedback, FEEDBACK_NUM());
-	var percFeedback = MULTIPLY(normFeedback, "100");
+    var sumFeedback = SUM(numFeedbackPhonedTheCallCentre, numFeedbackSentAnEmail);
+    var normFeedback = DIVIDE(sumFeedback, FEEDBACK_NUM());
+    var percFeedback = MULTIPLY(normFeedback, "100");
 
-	var chatsDeflected = MULTIPLY(numChats, normFeedback);
-	var savings = MULTIPLY(chatsDeflected, costPerContactCentreContact);
+    var chatsDeflected = MULTIPLY(numChats, normFeedback);
+    var savings = MULTIPLY(chatsDeflected, costPerContactCentreContact);
 
-	var contactCentreSavingsSet = VALUE_SET(	"Contact center savings with CyberTwin","","", 
-					numChats, "1", "Number of chats", 
-					percFeedback, "0", "% would have contacted the contact center", 
-					chatsDeflected, "1", "Chats deflected", 
-					costPerContactCentreContact, "5", "Cost per contact center contact", 
-					savings, "5", "&lt;b&gt;Total Cost Deflected by CyberTwin&lt;/b&gt;");
+    var contactCentreSavingsSet = VALUE_SET(    "Contact center savings with CyberTwin","","", 
+                    numChats, "1", "Number of chats", 
+                    percFeedback, "0", "% would have contacted the contact center", 
+                    chatsDeflected, "1", "Chats deflected", 
+                    costPerContactCentreContact, "5", "Cost per contact center contact", 
+                    savings, "5", "&lt;b&gt;Total Cost Deflected by CyberTwin&lt;/b&gt;");
 
-	PRINT_TEMPLATE(contactCentreSavingsSet, tableSetTemplate2);
+    PRINT_TEMPLATE(contactCentreSavingsSet, tableSetTemplate2);
 %&gt;
 
 
-	&lt;/td&gt;
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 
@@ -5815,68 +6137,68 @@ var table3ColTemplateGraph2 = "&lt;table class=subsection&gt;&lt;tr&gt;&lt;td va
 
 &lt;table class=section&gt;
 &lt;tr&gt;
-	&lt;td class=sectionHeading&gt;Performance&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Performance&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
-		&lt;table&gt;
-		&lt;tr&gt;&lt;td class=xaxislabel&gt;Performance Indicator&lt;/td&gt;&lt;td class=yaxislabel&gt;CyberTwin&lt;/td&gt;&lt;td class=yaxislabel&gt;Live Human Chat&lt;/td&gt;&lt;td class=yaxislabel&gt;Live Human Phone&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Accuracy - detecting questions&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(ACCURACY_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;68% customer satisfaction&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Accuracy - giving correct answers&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;60-75%&lt;/td&gt;&lt;td class=value&gt;81% first contact reolution rate&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Quality answers - good substantive answers that represent the brand well and reduce calls to contact centre&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Consistent answers&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;60%&lt;/td&gt;&lt;td class=value&gt;81% first contact reolution rate&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Response time - per answer&lt;/td&gt;&lt;td class=value&gt;&lt; 1 sec&lt;/td&gt;&lt;td class=value&gt;1-3 minutes&lt;/td&gt;&lt;td class=value&gt;62% in less than 10 sec&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Length of chats - avg. time&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(CHATSTATS_TIME_AVG(),"##.#");%&gt;mins&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Length of chats - avg. messages&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(CHATSTATS_MSG_AVG(),"##.#");%&gt;msgs&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Chats cut short&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;15%&lt;/td&gt;&lt;td class=value&gt;14% abandoned, 19% unresolved on first call&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Abandoned calls&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;&lt;/td&gt;&lt;td class=value&gt;14%&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Agent utilisation&lt;/td&gt;&lt;td class=value&gt;100%, 24 hrs a day&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;59%&lt;/td&gt;&lt;/tr&gt;	
-		&lt;tr&gt;&lt;td class=label&gt;# Concurrent sessions&lt;/td&gt;&lt;td class=value&gt;thousands per server&lt;/td&gt;&lt;td class=value&gt;&lt;/td&gt;&lt;td class=value&gt;1&lt;/td&gt;&lt;/tr&gt;	
-		&lt;tr&gt;&lt;td class=label&gt;Staff attrition&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;24%&lt;/td&gt;&lt;/tr&gt;
-		&lt;/table&gt;
+    &lt;td&gt;
+        &lt;table&gt;
+        &lt;tr&gt;&lt;td class=xaxislabel&gt;Performance Indicator&lt;/td&gt;&lt;td class=yaxislabel&gt;CyberTwin&lt;/td&gt;&lt;td class=yaxislabel&gt;Live Human Chat&lt;/td&gt;&lt;td class=yaxislabel&gt;Live Human Phone&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Accuracy - detecting questions&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(ACCURACY_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;68% customer satisfaction&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Accuracy - giving correct answers&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;60-75%&lt;/td&gt;&lt;td class=value&gt;81% first contact reolution rate&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Quality answers - good substantive answers that represent the brand well and reduce calls to contact centre&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Consistent answers&lt;/td&gt;&lt;td class=value&gt;100%&lt;/td&gt;&lt;td class=value&gt;60%&lt;/td&gt;&lt;td class=value&gt;81% first contact reolution rate&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Response time - per answer&lt;/td&gt;&lt;td class=value&gt;&lt; 1 sec&lt;/td&gt;&lt;td class=value&gt;1-3 minutes&lt;/td&gt;&lt;td class=value&gt;62% in less than 10 sec&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Length of chats - avg. time&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(CHATSTATS_TIME_AVG(),"##.#");%&gt;mins&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Length of chats - avg. messages&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(CHATSTATS_MSG_AVG(),"##.#");%&gt;msgs&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Chats cut short&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;15%&lt;/td&gt;&lt;td class=value&gt;14% abandoned, 19% unresolved on first call&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Abandoned calls&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;&lt;/td&gt;&lt;td class=value&gt;14%&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Agent utilisation&lt;/td&gt;&lt;td class=value&gt;100%, 24 hrs a day&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;59%&lt;/td&gt;&lt;/tr&gt;    
+        &lt;tr&gt;&lt;td class=label&gt;# Concurrent sessions&lt;/td&gt;&lt;td class=value&gt;thousands per server&lt;/td&gt;&lt;td class=value&gt;&lt;/td&gt;&lt;td class=value&gt;1&lt;/td&gt;&lt;/tr&gt; 
+        &lt;tr&gt;&lt;td class=label&gt;Staff attrition&lt;/td&gt;&lt;td class=value&gt;0%&lt;/td&gt;&lt;td class=value&gt;-&lt;/td&gt;&lt;td class=value&gt;24%&lt;/td&gt;&lt;/tr&gt;
+        &lt;/table&gt;
 
 
-		&lt;br&gt;&lt;br&gt;
-		
-		&lt;table&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Overall Accuracy&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(ACCURACY_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Direct Match Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;Direct Default Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;AutoLearn Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;AutoLearn Match Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;tr&gt;&lt;td class=label&gt;AutoLearn Default Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
-		&lt;/table&gt;
+        &lt;br&gt;&lt;br&gt;
+        
+        &lt;table&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Overall Accuracy&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(ACCURACY_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Direct Match Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(DIRECT_MATCH_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;Direct Default Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(DIRECT_DEFAULT_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;AutoLearn Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;AutoLearn Match Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_MATCH_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td class=label&gt;AutoLearn Default Rate&lt;/td&gt;&lt;td class=value&gt;&lt;%PRINT_NUMBER(AUTOLEARN_DEFAULT_RATE(),"##.#%");%&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;/table&gt;
 
-	&lt;/td&gt;
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 
 &lt;table class=section&gt;
 &lt;tr&gt;
-	&lt;td class=sectionHeading&gt;Learning About Users&lt;/td&gt;
+    &lt;td class=sectionHeading&gt;Learning About Users&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-	&lt;td&gt;
-	
+    &lt;td&gt;
+    
 &lt;%
-	var foldersSet = HIT_COUNT_TOP("FOLDER", topHitsNodeIdScope, numTopHits, "Most Popular Topics of Interest", "#", "Topic");
-	PRINT_TEMPLATE(foldersSet, "PIE", "300", "300", tableSetGraphTemplate2);
-	
-	var questionSet = HIT_COUNT_TOP("INPUT", topHitsNodeIdScope, numTopHits, "Most Frequently Asked Questions", "#", "Question");
-	PRINT_TEMPLATE(questionSet, tableSetTemplate2);
+    var foldersSet = HIT_COUNT_TOP("FOLDER", topHitsNodeIdScope, numTopHits, "Most Popular Topics of Interest", "#", "Topic");
+    PRINT_TEMPLATE(foldersSet, "PIE", "300", "300", tableSetGraphTemplate2);
+    
+    var questionSet = HIT_COUNT_TOP("INPUT", topHitsNodeIdScope, numTopHits, "Most Frequently Asked Questions", "#", "Question");
+    PRINT_TEMPLATE(questionSet, tableSetTemplate2);
 
-	PRINT_TEMPLATE(SOURCE_CLICKS_TOP(numTopHits, "Pages From Which CyberTwin Was Opened", "%", "URL"),  tableSetTemplate3);
+    PRINT_TEMPLATE(SOURCE_CLICKS_TOP(numTopHits, "Pages From Which CyberTwin Was Opened", "%", "URL"),  tableSetTemplate3);
 
-	PRINT_TEMPLATE(PAGE_LOADS_TOP(numTopHits, "Pages Loaded By CyberTwin During Chat", "%", "URL"), tableSetTemplate3);
+    PRINT_TEMPLATE(PAGE_LOADS_TOP(numTopHits, "Pages Loaded By CyberTwin During Chat", "%", "URL"), tableSetTemplate3);
 %&gt;
 
 &lt;%
-	PRINT_TEMPLATE(HITNODE_RULE_SETS(), "BAR", "300", "300", table3ColTemplateGraph1);
+    PRINT_TEMPLATE(HITNODE_RULE_SETS(), "BAR", "300", "300", table3ColTemplateGraph1);
 
-	PRINT_TEMPLATE(PROFILEVALUE_RULE_SETS(), "BAR", "300", "300", table3ColTemplateGraph1);
+    PRINT_TEMPLATE(PROFILEVALUE_RULE_SETS(), "BAR", "300", "300", table3ColTemplateGraph1);
 
 %&gt;
-	&lt;/td&gt;
+    &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/table&gt;
 

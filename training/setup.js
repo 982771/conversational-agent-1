@@ -60,7 +60,7 @@ function trainDialog(callback) {
         name: 'movies-' + new Date().valueOf(),
         file: fs.createReadStream(dialogTrainingFile)
       }, function(err, dialog) {
-        if (err) {
+        if (err) {         
           callback(err);
         } else {
           fs.writeFileSync(dialogFile, dialog.dialog_id);
@@ -89,6 +89,7 @@ function trainClassifier(callback) {
         training_data: fs.createReadStream(classifierTrainingFile)
       }, function(err, classifier) {
         if (err) {
+          console.log(err);
           callback(err);
         } else {
           fs.writeFileSync(classifierFile, classifier.classifier_id);

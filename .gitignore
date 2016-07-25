@@ -1,7 +1,6 @@
 node_modules
 .DS_Store
 .tmp
-.env.js
 npm-debug.log
 coverage
 .training/classifier_id

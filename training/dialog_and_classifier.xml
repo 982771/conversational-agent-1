@@ -18,15 +18,33 @@
                             <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
                             <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
                             <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ movies</item>
                         </grammar>
                         <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                         <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                        <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                        <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
+                        <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.Source}</action>
                         <action varName="Topic" operator="SET_TO">movies</action>
                         <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                         <goto ref="search_2414738"/>
+                        <!-- <output>
+                            <prompt>
+                                <item>Vote Rating is {Release_Year}</item>
+                            </prompt>
+                        </output> -->
                     </input>
                     <input>
                         <grammar>
@@ -871,7 +889,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                     <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                    <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                    <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
                     <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
                     <action varName="Node_Class" operator="SET_TO">movies</action>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
@@ -964,7 +982,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         </grammar>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                        <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                        <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
                         <!-- <goto ref="input_2459178"/> -->
                         <goto ref="input_2459179"/>
                     </input>
@@ -1049,7 +1067,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                                     <goto ref="input_2503411"/>
                                 </input>
-                                <input>
+                              <!--   <input>
                                     <grammar>
                                     <item>how recent</item>
                                     <item>$ (RECENCY)={Recency_Preference}</item>
@@ -1060,10 +1078,15 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                                     </grammar>
                                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <action varName="Recency_Year" operator="SET_TO">{Release_Year.Source}</action>
+                                    <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
                                     <action varName="Current_Index" operator="SET_TO">0</action>
                                     <goto ref="profileCheck_2449894"/>
-                                </input>
+                                    <output>
+                                        <prompt>
+                                            <item>Release Year is {Release_Year}</item>
+                                        </prompt>
+                                    </output>
+                                </input> -->
                                 <input>
                                     <grammar>
                                     <item>neither</item>
@@ -1176,7 +1199,13 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </grammar>
                                     <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
                                     <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
-                                    <goto ref="profileCheck_2449907"/>
+                                    <!-- <goto ref="profileCheck_2449907"/> -->
+                                     <goto ref="search_2414738"/>
+                                    <!-- <output>
+                                        <prompt>
+                                            <item>Actor + Release Year is {Release_Year}</item>
+                                        </prompt>
+                                    </output> -->
                                 </input>
 
                                 <input>
@@ -1666,7 +1695,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         </prompt>
                         <output id="output_2456876">
                             <prompt selectionType="RANDOM">
-                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}"}"</item>
+                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Vote_Rating:"{Vote_Rating}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}"}"</item>
                             </prompt>
                             <action varName="Last_Results" operator="SET_TO_NO"/>
                             <action varName="First_Results" operator="SET_TO_NO"/>
@@ -1696,6 +1725,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     varName="Recency_Preference" operator="SET_TO_BLANK"/>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </input>
                                     <goto ref="input_2460509"/>
@@ -2016,6 +2046,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     varName="Recency_Preference" operator="SET_TO_BLANK"/>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </output>
                                     </input>
@@ -5208,6 +5239,7 @@ border-color:#000000;
                 <!-- <var name="Cast_Name" type="TEXT" initValue="Xavier"/> -->
                 <var name="Cast_Name" type="TEXT" initValue=""/>
                 <var name="Release_Year" type="NUMBER" initValue="" description="Year of Release for the movie."/>
+                <var name="Vote_Rating" type="NUMBER" initValue="" description="MovieDB Rating for the movie."/>
 
             </var_folder>
             <var_folder name="Movie Search" type="VAR">

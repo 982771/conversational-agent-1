@@ -320,6 +320,9 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Search_Now" operator="SET_TO_NO"/>
                     <action varName="Certification_Preference" operator="SET_TO_BLANK"/>
                     <action varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                     <getUserInput>
                         <input>
                             <grammar>
@@ -1670,6 +1673,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </grammar>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                                     <goto ref="output_2456875"/>        
                                 </input>
                                 <input> 
@@ -1769,7 +1773,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </input>
-                                    <goto ref="input_2460509"/>
+                                    <!-- <goto ref="input_2460509"/> -->
+                                    <goto ref="search_2414738"/>
                                     </getUserInput>
                                     </output>
                                     </if>
@@ -1853,6 +1858,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     varName="Topic" operator="SET_TO_BLANK"/>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
                                     <goto ref="output_2414737"/>
                                     </input>
                                     <input>
@@ -1933,6 +1939,9 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </getUserInput>
                                     </output>
                                     </input>
+
+                                    <goto ref="search_2414738"/>
+                                    
                                     <if>
                                     <cond
                                     varName="Popularity_Score" operator="HAS_VALUE"/>

@@ -170,12 +170,15 @@ function getActorById(name){
       console.log("actorId: " + actor_id);      
       console.log("typeof params.release_year: " + params.release_year + " " 
         + Number.isNaN(Number(params.release_year)));
+      console.log("typeof params.vote_rating: " + params.vote_rating + " " 
+        + Number.isNaN(Number(params.vote_rating)));
 
       if (params.release_year !== "")
       {
         var query = {
           sort_by: 'popularity.desc',
           primary_release_year: params.release_year
+
         }; 
       }
       else /*if (!params.release_year !== "")*/
@@ -187,13 +190,20 @@ function getActorById(name){
         var query = {
           sort_by: 'popularity.desc',
           'primary_release_date.gte': (params.recency === 'current' ?  lastMonth : today),
-          'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)
+          'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)         
         };
       }
 
+      //Search By Actor Name
       if(actor_id !== "")
       {
         query.with_cast = actor_id;
+      }
+
+      //Search By Vote Rating More Than The Specified Value
+      if(params.vote_rating !== "")
+      {
+        query['vote_average.gte'] = params.vote_rating
       }
 
       // ratings: R, G, PG, PG-13
@@ -214,6 +224,7 @@ function getActorById(name){
       query.page = Math.floor(params.index / TMDB_PAGE_SIZE) + 1;
       var index = params.index % TMDB_PAGE_SIZE >= 10 ? 10 : 0;
 
+      console.log(query);
       // TMDB API call
       tmdbRequest({ url: DISCOVER_URL, qs: query, json:true }, function(err, res, body) {
         if (err)

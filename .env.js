@@ -4,8 +4,8 @@ VCAP_SERVICES: JSON.stringify({
   dialog: [{
     credentials: {
       url: 'https://gateway.watsonplatform.net/dialog/api',
-      username: '9e350cfb-945f-4324-9475-26760a08da96',
-      password: 'CpcTRlTK6BMC'
+      username: 'd850c8de-4a72-4023-b19e-fbd36aeb2d2d',
+      password: 'ZDFFdqUJJlKT'
     }
   }],
   natural_language_classifier: [{

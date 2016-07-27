@@ -16,7 +16,7 @@
                             <item>$ (CERTIFICATION)={Certification_Preference}</item>
                             <item>$ (RECENCY)={Recency_Preference}</item>
                             <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
-                            <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                            <!-- <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item> -->
                             <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                             <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
@@ -35,16 +35,11 @@
                         <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                         <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                        <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
-                        <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.Source}</action>
+                        <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                        <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.source}</action>
                         <action varName="Topic" operator="SET_TO">movies</action>
                         <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
                         <goto ref="search_2414738"/>
-                        <!-- <output>
-                            <prompt>
-                                <item>Vote Rating is {Release_Year}</item>
-                            </prompt>
-                        </output> -->
                     </input>
                     <input>
                         <grammar>
@@ -878,8 +873,21 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         <item>* SearchMovies</item>
                         <item>$ (RECENCY)={Recency_Preference}</item>
                         <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
-                        <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                        <!-- <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item> -->
                         <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+
+                        <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                        <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                        <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                        <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                        <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
+                        <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
+                        <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                     </grammar>
                     <action varName="Topic" operator="SET_TO">movies</action>
                     <action varName="Greeting_Count" operator="SET_TO">0</action>
@@ -888,11 +896,12 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Page" operator="SET_TO">new</action>
                     <action varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
                     <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                    <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.source}</action>
                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                    <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
+                    <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
                     <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
                     <action varName="Node_Class" operator="SET_TO">movies</action>
-                    <action varName="Defaulted_Previous" operator="SET_TO_NO"/>
+                    <action varName="Defaulted_Previous" operator="SET_TO_NO"/>                        
                     <input id="input_2503411">
                         <grammar>
                             <item>Date/Time parent concept</item>
@@ -944,10 +953,26 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         <grammar>
                             <item>Certification</item>
                             <item>$(CERTIFICATION)={Certification_Preference}</item>
+
+                            <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+                            <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+
                         </grammar>
                         <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                        <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.source}</action>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
-                        <goto ref="input_2510382"/>
+                        <goto ref="input_2510382"/>                     
                     </input>
                     <input id="input_2510382">
                         <grammar>
@@ -976,15 +1001,17 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ (RECENCY)={Recency_Preference}</item>
                             <item>$ movies in {Recency_Preference}</item>
                             <item>$ in {Recency_Preference}</item>
-                            <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
-                            <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                            <!-- <item>$ movies by * in (DYNAMIC_DATA)={Release_Year}</item> -->
+                            <item>$ in (DYNAMIC_DATA)={Release_Year} with</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year} having</item>
                             <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+                            <!-- <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item> -->
                         </grammar>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                        <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
+                        <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
                         <!-- <goto ref="input_2459178"/> -->
-                        <goto ref="input_2459179"/>
+                        <goto ref="input_2459179"/>                        
                     </input>
                     <input id="input_2459178">
                         <grammar>
@@ -998,9 +1025,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     </input>
                     <input id="input_2459179">
                         <grammar>                            
-                            <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item> 
-                            <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item> 
-                            <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>        
+                            <!-- <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>  -->
+                            <!-- <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item> -->        
                             <item>$ Cast</item>
                             <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>
@@ -1008,33 +1034,48 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ Star is (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Actor is (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Actor (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ By Actor (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Acted By (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Starred By (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Stared By (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
-                            <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
-                            <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} in * with</item>  
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with * in </item>
                             <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>  
-                            <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>  
-                            <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item>  
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} in </item>  
+                            <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
-                            <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>  
+                            <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Starred By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Stared By (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Starring (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Staring (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>Movies by (DYNAMIC_DATA)={Cast_Name}</item>
+                            <!-- <item> * Movies By (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>  --> 
+                            <!-- <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item> -->
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} in</item>  
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>
+                            <item>$ movies in * with</item>
+                            <item>$ movies in * having</item>
                         </grammar>
                         <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
-                        <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
+                        <!-- <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action> -->
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <!-- <goto ref="input_2443841"/> -->                        
-                        <!-- <goto ref="profileCheck_2503330"/> -->                        
+                        <!-- <goto ref="profileCheck_2503330"/> -->  
+
                         <goto ref="output_2456875"/>
+                        
+                        
+                        <!-- <output>
+                            <prompt>
+                                <item>Cast Name is {Cast_Name}</item>
+                            </prompt>
+                        </output> -->
                     </input>
 
                     <if id="profileCheck_2449907">
@@ -1067,18 +1108,18 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
                                     <goto ref="input_2503411"/>
                                 </input>
-                              <!--   <input>
+                                <input>
                                     <grammar>
                                     <item>how recent</item>
                                     <item>$ (RECENCY)={Recency_Preference}</item>
                                     <item>$ movies in {Recency_Preference}</item>
                                     <item>$ in {Recency_Preference}</item>
-                                    <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <!-- <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
                                     <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
-                                    <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+                                    <item>$ in (DYNAMIC_DATA)={Release_Year}</item> -->
                                     </grammar>
                                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <action varName="Release_Year" operator="SET_TO">{Release_Year.Source}</action>
+                                    <!-- <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action> -->
                                     <action varName="Current_Index" operator="SET_TO">0</action>
                                     <goto ref="profileCheck_2449894"/>
                                     <output>
@@ -1086,7 +1127,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                             <item>Release Year is {Release_Year}</item>
                                         </prompt>
                                     </output>
-                                </input> -->
+                                </input>
                                 <input>
                                     <grammar>
                                     <item>neither</item>
@@ -1168,7 +1209,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <grammar>
                                     <item>Movies by (DYNAMIC_DATA)={Cast_Name} </item>
                                     <item>Movies by (DYNAMIC_DATA)={Cast_Name} in (DYNAMIC_DATA)={Release_Year}</item>
-                                    <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item>
+                                    <!-- <item>(RECENCY)={Recency_Preference} * Movies by (DYNAMIC_DATA)={Cast_Name}</item> -->
                                     <item>$ Cast</item>
                                     <item>$ Cast name is (DYNAMIC_DATA)={Cast_Name}</item>
                                     <item>$ Star name is (DYNAMIC_DATA)={Cast_Name}</item>

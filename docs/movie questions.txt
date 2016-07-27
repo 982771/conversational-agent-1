@@ -1,0 +1,34 @@
+http://docs.themoviedb.apiary.io/#reference/movies/movieidalternativetitles
+
+
+Questions which we have already answered
+
+movies by shah rukh khan in 2016
+current comedy movies by shahrukh khan ( here current mean 1 month)
+upcoming comedy movies  by shahrukh khan (upcoming movies are not released)
+action movies by salman khan with more than 7 rating in 2016
+action movies by salman khan in 2016 with more than 7 rating
+action movies in 2015 with more than 7 rating
+
+
+More questions
+
+
+1. movies by genre comedy in 2015 having more than 7 rating (1 - 5)
+
+2. movies in which shahrukh and salman have worked together
+
+3. movies directed by yash chopra and casted by shahrukh khan
+
+4. number of movies by shahrukh khan released in 2014.
+
+
+//3. indian actors who have worked in hollywood movies
+
+//3. hit movies in comedy in 2016   (rating > 7 and income of 200 crores or how many weeks did the movie run in box office)
+
+
+//3. actors who have worked in comedy and action movies
+
+
+

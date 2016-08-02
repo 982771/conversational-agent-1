@@ -15,9 +15,9 @@
                             <item>$ (GENRE)={Genre_Preference}</item>
                             <item>$ (CERTIFICATION)={Certification_Preference}</item>
                             <item>$ (RECENCY)={Recency_Preference}</item>
-                            <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
-                            <!-- <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item> -->
-                            <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+                            <!-- <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year}</item> -->
                             <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
@@ -26,8 +26,8 @@
                             <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
                             <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
-                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <!-- <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item> -->
                             <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ movies</item>
@@ -321,8 +321,11 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Certification_Preference" operator="SET_TO_BLANK"/>
                     <action varName="Genre_Preference" operator="SET_TO_BLANK"/>
                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                    <action varName="Cast_Name_2" operator="SET_TO_BLANK"/>
+                    <action varName="Director_Name" operator="SET_TO_BLANK"/>
                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
                     <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
+                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>
                     <getUserInput>
                         <input>
                             <grammar>
@@ -875,22 +878,24 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         <item>search for movies</item>
                         <item>* SearchMovies</item>
                         <item>$ (RECENCY)={Recency_Preference}</item>
-                        <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
-                        <!-- <item>$ movies * in (DYNAMIC_DATA)={Release_Year}</item> -->
-                        <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
 
-                        <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
-                        <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
-                        <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                        <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                        <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
-                        <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
-                        <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                        <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                        <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
-                        <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
-                        <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
-                        <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+                        <item>$ directed by (DYNAMIC_DATA)={Director_Name} and casted by (DYNAMIC_DATA)={Cast_Name}</item>
+                        <item>$ directed by (DYNAMIC_DATA)={Director_Name} and acted by (DYNAMIC_DATA)={Cast_Name}</item>
+                        <item>$ directed by (DYNAMIC_DATA)={Director_Name} and starred by (DYNAMIC_DATA)={Cast_Name}</item>
+                        <item>$ directed by (DYNAMIC_DATA)={Director_Name}</item>
+
+                        <item>$ which (DYNAMIC_DATA)={Cast_Name} &amp; (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                        <item>$ which (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                        <item>$ which (DYNAMIC_DATA)={Cast_Name} , (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                        <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
+                        <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
+                        <item>$ by (DYNAMIC_DATA)={Cast_Name}</item>
+
+
+                        <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item>
+                        <item>$ in (DYNAMIC_DATA)={Release_Year} directed</item>
+                        <item>$ in (DYNAMIC_DATA)={Release_Year} in</item>
+                        <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
                     </grammar>
                     <action varName="Topic" operator="SET_TO">movies</action>
                     <action varName="Greeting_Count" operator="SET_TO">0</action>
@@ -902,7 +907,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Vote_Rating" operator="SET_TO">{Vote_Rating.source}</action>
                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
                     <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
-                    <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                    <!-- <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action> -->
                     <action varName="Node_Class" operator="SET_TO">movies</action>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>                        
                     <input id="input_2503411">
@@ -949,25 +954,64 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </goto>
                                 </output>
                             </function>
-                            <goto ref="input_2443775"/>
+                            <goto ref="input_2510385"/>
                         </output>
                     </input>
+
+                    <input id="input_2510385">
+                        <grammar>
+                            <item>No of *</item>
+                            <item>Number of *</item>
+                            <item>Number of movies</item>
+                            <item>$ Number</item>
+                            <item>$ Count</item>
+                        </grammar>
+                        <action varName="No_Of_Movies" operator="SET_TO">Yes</action>
+                        <goto ref="input_2443775"/>
+                    </input>
+
+
                     <input id="input_2443775">
                         <grammar>
                             <item>Certification</item>
                             <item>$(CERTIFICATION)={Certification_Preference}</item>
 
+                            <item>$ with rating (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ rating (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating in</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating in</item>
+                            <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating in</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating in</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} in</item>
+
+                            <item>$ with rating (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ rating (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating released in</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating released in</item>
+                            <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating released in</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating released in</item>
+                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} released in</item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} released in</item>
+
+
                             <item>$ with rating (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ with more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
                             <item>$ more than (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating} in</item>
+                            <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating} directed</item>
                             <item>$ with rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating more than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ with (DYNAMIC_DATA)={Vote_Rating} rating</item>
                             <item>$ having (DYNAMIC_DATA)={Vote_Rating} rating</item>
-                            <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
-                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <!-- <item>$ with (DYNAMIC_DATA)={Vote_Rating} </item>
+                            <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item> -->
                             <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
 
@@ -1005,9 +1049,48 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ movies in {Recency_Preference}</item>
                             <item>$ in {Recency_Preference}</item>
                             <!-- <item>$ movies by * in (DYNAMIC_DATA)={Release_Year}</item> -->
+                            <item>$ in which * in (DYNAMIC_DATA)={Release_Year}</item>
+
+                            <item>$ in which * in (DYNAMIC_DATA)={Release_Year} having more than *</item>
+                            <item>$ in which * in (DYNAMIC_DATA)={Release_Year} with more than *</item>
+                            <item>$ in which * in (DYNAMIC_DATA)={Release_Year} having *</item>
+                            <item>$ in which * in (DYNAMIC_DATA)={Release_Year} with *</item>
+
+                            <item>$ in (DYNAMIC_DATA)={Release_Year} in which</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year} directed</item>
+
+                            <item>$ in which * with</item>
+                            <item>$ in which * having</item>
+                            <item>$ in which</item>
+
                             <item>$ in (DYNAMIC_DATA)={Release_Year} with</item>
                             <item>$ in (DYNAMIC_DATA)={Release_Year} having</item>
+                            <item>$ in (DYNAMIC_DATA)={Release_Year} in</item>
                             <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+
+
+                            <item>$ movies released in {Recency_Preference}</item>
+                            <item>$ in {Recency_Preference}</item>
+                            <!-- <item>$ movies by * in (DYNAMIC_DATA)={Release_Year}</item> -->
+                            <item>$ in which * released in (DYNAMIC_DATA)={Release_Year}</item>
+
+                            <item>$ in which * released in (DYNAMIC_DATA)={Release_Year} having more than *</item>
+                            <item>$ in which *  released in (DYNAMIC_DATA)={Release_Year} with more than *</item>
+                            <item>$ in which * released in (DYNAMIC_DATA)={Release_Year} having *</item>
+                            <item>$ in which * released in (DYNAMIC_DATA)={Release_Year} with *</item>
+
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year} in which</item>
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year} directed</item>
+
+                            <item>$ released in which * with</item>
+                            <item>$ released in which * having</item>
+                            <item>$ released in which</item>
+
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year} with</item>
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year} having</item>
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year} in</item>
+                            <item>$ released in (DYNAMIC_DATA)={Release_Year}</item>
+                            
                             <!-- <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item> -->
                         </grammar>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
@@ -1044,10 +1127,34 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ Starring (DYNAMIC_DATA)={Cast_Name} with</item>
                             <item>$ Staring (DYNAMIC_DATA)={Cast_Name} with</item>
                             <item>$ Movies By Actor (DYNAMIC_DATA)={Cast_Name} with</item>  
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>  
+                            
                             <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} in * with</item>  
                             <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with * in </item>
-                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with</item>  
                             <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} in </item>  
+
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} released in * with</item>  
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} with * released in </item>
+                            <item>$ Movies By (DYNAMIC_DATA)={Cast_Name} released in </item> 
+
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and casted by (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and acted by (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and starred by (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} with</item>
+
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and casted by (DYNAMIC_DATA)={Cast_Name} having</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and acted by (DYNAMIC_DATA)={Cast_Name} having</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and starred by (DYNAMIC_DATA)={Cast_Name} with</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} having</item>
+
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and casted by (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and acted by (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} and starred by (DYNAMIC_DATA)={Cast_Name}</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name} in</item>
+                            <item>$ directed by (DYNAMIC_DATA)={Director_Name}</item>
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} directed by</item>
+
+
                             <item>$ By Actor (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ By (DYNAMIC_DATA)={Cast_Name} with</item>  
                             <item>$ Acted By (DYNAMIC_DATA)={Cast_Name}</item>
@@ -1062,10 +1169,20 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <!-- <item> * Movies By (DYNAMIC_DATA)={Cast_Name} </item> -->
                             <item>$ By (DYNAMIC_DATA)={Cast_Name} in</item>  
                             <item>$ By (DYNAMIC_DATA)={Cast_Name} </item>
+                            <item>$ which (DYNAMIC_DATA)={Cast_Name} &amp; (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                            <item>$ which (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                            <item>$ which (DYNAMIC_DATA)={Cast_Name} , (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+                            <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
+                            <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
                             <item>$ movies in * with</item>
                             <item>$ movies in * having</item>
+
+                            <item>$ movies released in * with</item>
+                            <item>$ movies released in * having</item>
                         </grammar>
                         <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
+                        <action varName="Cast_Name_2" operator="SET_TO">{Cast_Name_2.source}</action>
+                        <action varName="Director_Name" operator="SET_TO">{Director_Name.source}</action>
                         <!-- <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action> -->
                         <action varName="Node_Class" operator="SET_TO">movies</action>
                         <!-- <goto ref="input_2443841"/> -->                        
@@ -1672,8 +1789,11 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <item>$ No</item>
                                     </grammar>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name_2" operator="SET_TO_BLANK"/>
+                                    <action varName="Director_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
+                                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>
                                     <goto ref="output_2456875"/>        
                                 </input>
                                 <input> 
@@ -1740,7 +1860,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         </prompt>
                         <output id="output_2456876">
                             <prompt selectionType="RANDOM">
-                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Vote_Rating:"{Vote_Rating}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}"}"</item>
+                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Vote_Rating:"{Vote_Rating}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}", Actor_2:"{Cast_Name_2}", Director:"{Director_Name}", NoOfMovies:"{No_Of_Movies}"}"</item> 
                             </prompt>
                             <action varName="Last_Results" operator="SET_TO_NO"/>
                             <action varName="First_Results" operator="SET_TO_NO"/>
@@ -1751,6 +1871,36 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <grammar>
                                     <item>UPDATE NUM_MOVIES</item>
                                     </grammar>
+
+                                    <if>
+                                    <cond varName="No_Of_Movies" operator="EQUALS">Yes</cond>
+                                    <if>
+                                    <cond varName="Num_Movies" operator="EQUALS">0</cond>
+                                    <output id="output_2460236">
+                                    <prompt selectionType="RANDOM">
+                                    <item>There are no movies matching your criteria.Please change your criteria</item>
+                                    </prompt>
+                                    <getUserInput>
+                                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>
+                                                                        
+                                    <!-- <goto ref="input_2460509"/> -->
+                                    <goto ref="search_2414738"/>
+                                    </getUserInput>
+                                    </output>  
+                                    </if>
+                                    <output id="output_2460235">
+                                    <prompt selectionType="RANDOM">
+                                    <item> I found {Num_Movies} number of movies matching your criteria.</item>
+                                    </prompt>
+                                    <getUserInput>
+                                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>
+                                                                        
+                                    <!-- <goto ref="input_2460509"/> -->
+                                    <goto ref="search_2414738"/>
+                                    </getUserInput>
+                                    </output>
+                                    </if>
+
                                     <if>
                                     <cond varName="Num_Movies" operator="EQUALS">0</cond>
                                     <output id="output_2460234">
@@ -1769,8 +1919,11 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <action
                                     varName="Recency_Preference" operator="SET_TO_BLANK"/>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name_2" operator="SET_TO_BLANK"/>
+                                    <action varName="Director_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
+                                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>
                                     <goto ref="profileCheck_2449907"/>
                                     </input>
                                     <!-- <goto ref="input_2460509"/> -->
@@ -1815,7 +1968,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <prompt selectionType="RANDOM">
                                     <item>Good choices, {User_Name}! I found {Num_Movies} results for {Recency_Preference} {Certification_Preference}-rated {Genre_Preference} movies.</item>
                                     </prompt>
-                                    <getUserInput id="getUserInput_2456877">
+                                <getUserInput id="getUserInput_2456877">
                                     <input id="input_2456878">
                                     <grammar>
                                     <item>Okay</item>
@@ -1857,8 +2010,11 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <action
                                     varName="Topic" operator="SET_TO_BLANK"/>
                                     <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                    <action varName="Cast_Name_2" operator="SET_TO_BLANK"/>
+                                    <action varName="Director_Name" operator="SET_TO_BLANK"/>
                                     <action varName="Release_Year" operator="SET_TO_BLANK"/>
                                     <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
+                                    <action varName="No_Of_Movies" operator="SET_TO_NO"/>                                    
                                     <goto ref="output_2414737"/>
                                     </input>
                                     <input>
@@ -1943,646 +2099,674 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <goto ref="search_2414738"/>
                                     
                                     <if>
-                                    <cond
-                                    varName="Popularity_Score" operator="HAS_VALUE"/>
-                                    <input>
-                                    <grammar>
-                                    <item>What are the ratings?</item>
-                                    <item>$ ratings for it</item>
-                                    <item>$ ratings does it get</item>
-                                    <item>$ ratings it gets</item>
-                                    <item>$ ratings it got</item>
-                                    <item>$ ratings it received</item>
-                                    <item>$ its ratings</item>
-                                    <item>$ how many * stars</item>
-                                    <item>why</item>
-                                    <item>why not</item>
-                                    <item>why do you say that</item>
-                                    <item>$ how are the ratings</item>
-                                    <item>$ what are the ratings like</item>
-                                    </grammar>
-                                    <if>
-                                    <cond
-                                    varName="Popularity_Score" operator="LESS_THEN">0</cond>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>I'm afraid no one has rated {Selected_Movie} yet.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2503113"/>
-                                    </output>
-                                    </if>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>{Selected_Movie} gets {Popularity_Score} stars from users.</item>
-                                    </prompt>
-                                    <getUserInput id="getUserInput_2503113">
-                                    <input>
-                                    <grammar>
-                                    <item>okay</item>
-                                    <item>$ sucks</item>
-                                    <item>haha</item>
-                                    </grammar>
-                                    <goto ref="output_2460098"/>
-                                    </input>
-                                    <goto ref="input_2456878"/>
-                                    </getUserInput>
-                                    </output>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>What is it about?</item>
-                                    <item>$ what's it about?</item>
-                                    <item>$ tell me about it</item>
-                                    <item>$ what happens in it</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>There should be a short description of {Selected_Movie} to the right.</item>
-                                    </prompt>
-                                    <getUserInput>
-                                    <input>
-                                    <grammar>
-                                    <item>okay</item>
-                                    <item>$ sucks</item>
-                                    <item>haha</item>
-                                    </grammar>
-                                    <goto ref="output_2460098"/>
-                                    </input>
-                                    <goto ref="input_2456878"/>
-                                    </getUserInput>
-                                    </output>
-                                    </input>
-                                    <goto ref="input_2531519"/>
+                                        <cond
+                                        varName="Popularity_Score" operator="HAS_VALUE"/>
+                                        <input>
+                                            <grammar>
+                                            <item>What are the ratings?</item>
+                                            <item>$ ratings for it</item>
+                                            <item>$ ratings does it get</item>
+                                            <item>$ ratings it gets</item>
+                                            <item>$ ratings it got</item>
+                                            <item>$ ratings it received</item>
+                                            <item>$ its ratings</item>
+                                            <item>$ how many * stars</item>
+                                            <item>why</item>
+                                            <item>why not</item>
+                                            <item>why do you say that</item>
+                                            <item>$ how are the ratings</item>
+                                            <item>$ what are the ratings like</item>
+                                            </grammar>
+                                            <if>
+                                            <cond
+                                            varName="Popularity_Score" operator="LESS_THEN">0</cond>
+                                            <output>
+                                            <prompt selectionType="RANDOM">
+                                            <item>I'm afraid no one has rated {Selected_Movie} yet.</item>
+                                            </prompt>
+                                            <goto ref="getUserInput_2503113"/>
+                                            </output>
+                                            </if>
+                                            <output>
+                                            <prompt selectionType="RANDOM">
+                                            <item>{Selected_Movie} gets {Popularity_Score} stars from users.</item>
+                                            </prompt>
+                                            <getUserInput id="getUserInput_2503113">
+                                            <input>
+                                            <grammar>
+                                            <item>okay</item>
+                                            <item>$ sucks</item>
+                                            <item>haha</item>
+                                            </grammar>
+                                            <goto ref="output_2460098"/>
+                                            </input>
+                                            <goto ref="input_2456878"/>
+                                            </getUserInput>
+                                            </output>
+                                        </input>
+                                        <input>
+                                            <grammar>
+                                            <item>What is it about?</item>
+                                            <item>$ what's it about?</item>
+                                            <item>$ tell me about it</item>
+                                            <item>$ what happens in it</item>
+                                            </grammar>
+                                            <output>
+                                            <prompt selectionType="RANDOM">
+                                            <item>There should be a short description of {Selected_Movie} to the right.</item>
+                                            </prompt>
+                                            <getUserInput>
+                                            <input>
+                                            <grammar>
+                                            <item>okay</item>
+                                            <item>$ sucks</item>
+                                            <item>haha</item>
+                                            </grammar>
+                                            <goto ref="output_2460098"/>
+                                            </input>
+                                            <goto ref="input_2456878"/>
+                                            </getUserInput>
+                                            </output>
+                                        </input>
+                                        <goto ref="input_2531519"/>
                                     </if>
                                     <input id="input_2531519">
-                                    <grammar>
-                                    <item>What is * about?</item>
-                                    <item>$ what is * about</item>
-                                    <item>$ tell me about</item>
-                                    <item>$ what's the plot of</item>
-                                    <item>$ what's the storyline of</item>
-                                    <item>$ what happens in</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>Click on a movie above to find a brief description.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
+                                        <grammar>
+                                        <item>What is * about?</item>
+                                        <item>$ what is * about</item>
+                                        <item>$ tell me about</item>
+                                        <item>$ what's the plot of</item>
+                                        <item>$ what's the storyline of</item>
+                                        <item>$ what happens in</item>
+                                        </grammar>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>Click on a movie above to find a brief description.</item>
+                                        </prompt>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>Are those</item>
-                                    <item>$ are those</item>
-                                    <item>$ are these</item>
-                                    <item>$ is that</item>
-                                    <item>$ were those</item>
-                                    <item>$ were these</item>
-                                    <item>$ does this</item>
-                                    <item>$ do these</item>
-                                    <item>$ are they</item>
-                                    </grammar>
-                                    <input>
-                                    <grammar>
-                                    <item>What are</item>
-                                    <item>$ what are</item>
-                                    <item>$ what were</item>
-                                    </grammar>
-                                    <action
-                                    varName="Page" operator="SET_TO">repeat</action>
-                                    <goto ref="output_2456876"/>
+                                        <grammar>
+                                        <item>Are those</item>
+                                        <item>$ are those</item>
+                                        <item>$ are these</item>
+                                        <item>$ is that</item>
+                                        <item>$ were those</item>
+                                        <item>$ were these</item>
+                                        <item>$ does this</item>
+                                        <item>$ do these</item>
+                                        <item>$ are they</item>
+                                        </grammar>
+                                        <input>
+                                            <grammar>
+                                            <item>What are</item>
+                                            <item>$ what are</item>
+                                            <item>$ what were</item>
+                                            </grammar>
+                                            <action
+                                            varName="Page" operator="SET_TO">repeat</action>
+                                            <goto ref="output_2456876"/>
+                                        </input>
+                                        <input>
+                                            <grammar>
+                                            <item>all of them</item>
+                                            <item>$ all</item>
+                                            <item>$ it</item>
+                                            </grammar>
+                                            <goto ref="profileCheck_2459411"/>
+                                        </input>
+                                        <if id="profileCheck_2459411">
+                                            <cond
+                                            varName="Current_Index" operator="LESS_THEN">{Num_Movies}</cond>
+                                            <output>
+                                            <prompt selectionType="RANDOM">
+                                            <item>No. Say &lt;i&gt;show me more&lt;/i&gt; if you want to see more.</item>
+                                            </prompt>
+                                            <goto ref="getUserInput_2456877"/>
+                                            </output>
+                                        </if>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>Yes. I'm afraid that's all of them.</item>
+                                        </prompt>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>all of them</item>
-                                    <item>$ all</item>
-                                    <item>$ it</item>
-                                    </grammar>
-                                    <goto ref="profileCheck_2459411"/>
-                                    </input>
-                                    <if id="profileCheck_2459411">
-                                    <cond
-                                    varName="Current_Index" operator="LESS_THEN">{Num_Movies}</cond>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>No. Say &lt;i&gt;show me more&lt;/i&gt; if you want to see more.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </if>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>Yes. I'm afraid that's all of them.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>New search</item>
-                                    <item>$ new search</item>
-                                    <item>$ clear choices</item>
-                                    <item>$ reset choices</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>Okay.</item>
-                                    </prompt>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO_BLANK"/>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO_BLANK"/>
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO_BLANK"/>
-                                    <action varName="Cast_Name" operator="SET_TO_BLANK"/>
-                                    <action varName="Release_Year" operator="SET_TO_BLANK"/>
-                                    <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
-                                    <goto ref="profileCheck_2449907"/>
-                                    </output>
+                                        <grammar>
+                                        <item>New search</item>
+                                        <item>$ new search</item>
+                                        <item>$ clear choices</item>
+                                        <item>$ reset choices</item>
+                                        </grammar>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>Okay.</item>
+                                        </prompt>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO_BLANK"/>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO_BLANK"/>
+                                        <action varName="Cast_Name" operator="SET_TO_BLANK"/>
+                                        <action varName="Cast_Name_2" operator="SET_TO_BLANK"/>
+                                        <action varName="Director_Name" operator="SET_TO_BLANK"/>
+                                        <action varName="Release_Year" operator="SET_TO_BLANK"/>
+                                        <action varName="Vote_Rating" operator="SET_TO_BLANK"/>
+                                        <action varName="No_Of_Movies" operator="SET_TO_NO"/>
+                                        <goto ref="profileCheck_2449907"/>
+                                        </output>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>single_parameter</item>
-                                    <item>(RECENCY)={Recency_Preference}</item>
-                                    <item>(GENRE)={Genre_Preference}</item>
-                                    <item>(CERTIFICATION)={Certification_Preference}</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>Is this a new search?</item>
-                                    </prompt>
-                                    <action
-                                    varName="User_Input" operator="SET_TO_USER_INPUT"/>
-                                    <getUserInput>
-                                    <input>
-                                    <grammar>
-                                    <item>Yes</item>
-                                    <item>$ new search</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt/>
-                                    <action
-                                    varName="User_Input" operator="APPEND">. {Class1}</action>
-                                    <goto ref="input_2443892">
+                                        <grammar>
+                                        <item>single_parameter</item>
+                                        <item>(RECENCY)={Recency_Preference}</item>
+                                        <item>(GENRE)={Genre_Preference}</item>
+                                        <item>(CERTIFICATION)={Certification_Preference}</item>
+                                        </grammar>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>Is this a new search?</item>
+                                        </prompt>
+                                        <action
+                                        varName="User_Input" operator="SET_TO_USER_INPUT"/>
+                                        <getUserInput>
+                                        <input>
+                                        <grammar>
+                                        <item>Yes</item>
+                                        <item>$ new search</item>
+                                        </grammar>
+                                        <output>
+                                        <prompt/>
+                                        <action
+                                        varName="User_Input" operator="APPEND">. {Class1}</action>
+                                        <goto ref="input_2443892">
 
-                                    <action
-                                    varName="User_Input" operator="SET_AS_USER_INPUT"/>
-                                    </goto>
-                                    </output>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>No</item>
-                                    <item>$ same</item>
-                                    </grammar>
-                                    <goto ref="input_2531487">
-                                    <action
-                                    varName="User_Input" operator="SET_AS_USER_INPUT"/>
-                                    </goto>
-                                    </input>
-                                    <goto ref="search_2414738"/>
-                                    </getUserInput>
-                                    </output>
+                                        <action
+                                        varName="User_Input" operator="SET_AS_USER_INPUT"/>
+                                        </goto>
+                                        </output>
+                                        </input>
+                                        <input>
+                                        <grammar>
+                                        <item>No</item>
+                                        <item>$ same</item>
+                                        </grammar>
+                                        <goto ref="input_2531487">
+                                        <action
+                                        varName="User_Input" operator="SET_AS_USER_INPUT"/>
+                                        </goto>
+                                        </input>
+                                        <goto ref="search_2414738"/>
+                                        </getUserInput>
+                                        </output>
                                     </input>
                                     <input id="input_2460509">
-                                    <grammar>
-                                    <item>Remove genre</item>
-                                    <item>$ remove (GENRE)={Genre_Preference}</item>
-                                    <item>$ cancel (GENRE)={Genre_Preference}</item>
-                                    <item>$ remove genre</item>
-                                    <item>$ cancel genre</item>
-                                    <item>$ any genre</item>
-                                    <item>$ all genre</item>
-                                    </grammar>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO_BLANK"/>
-                                    <goto ref="output_2456875"/>
+                                        <grammar>
+                                        <item>Remove genre</item>
+                                        <item>$ remove (GENRE)={Genre_Preference}</item>
+                                        <item>$ cancel (GENRE)={Genre_Preference}</item>
+                                        <item>$ remove genre</item>
+                                        <item>$ cancel genre</item>
+                                        <item>$ any genre</item>
+                                        <item>$ all genre</item>
+                                        </grammar>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>Remove rating</item>
-                                    <item>$ remove (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ cancel (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ remove rating</item>
-                                    <item>$ cancel rating</item>
-                                    <item>$ all ratings</item>
-                                    <item>$ all rating</item>
-                                    <item>$ any ratings</item>
-                                    <item>$ any rating</item>
-                                    </grammar>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO_BLANK"/>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <goto ref="output_2456875"/>
+                                        <grammar>
+                                        <item>Remove rating</item>
+                                        <item>$ remove (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ cancel (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ remove rating</item>
+                                        <item>$ cancel rating</item>
+                                        <item>$ all ratings</item>
+                                        <item>$ all rating</item>
+                                        <item>$ any ratings</item>
+                                        <item>$ any rating</item>
+                                        </grammar>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO_BLANK"/>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>all movies</item>
-                                    <item>$ all movies</item>
-                                    <item>$ all results</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO_BLANK"/>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO_BLANK"/>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <goto ref="output_2456875"/>
+                                        <grammar>
+                                        <item>all movies</item>
+                                        <item>$ all movies</item>
+                                        <item>$ all results</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO_BLANK"/>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <goto ref="output_2456875"/>
                                     </input>
+
+                                   <!--  <input>
+                                        <grammar>
+                                        <item>again</item>
+                                        <item>$ again</item>
+                                        <item>$ one more time</item>
+                                        <item>more</item>
+                                        <item>$ more</item>
+                                        <item>$ next</item>
+                                        <item>$ forward</item>
+                                        </grammar>
+                                        <action varName="Page" operator="SET_TO">repeat</action>
+                                        <goto ref="output_2456875"/>
+                                    </input> -->
+
+                                    <!-- <goto ref="search_2414738"/>  -->
+                                    <!-- After This Line Everything is Useless
+ -->
                                     <input isOffline="true">
-                                    <grammar>
-                                    <item>Showtimes</item>
-                                    <item>$ showtimes</item>
-                                    <item>$ times</item>
-                                    <item>$ time</item>
-                                    <item>$ showing</item>
-                                    <item>$ near me</item>
-                                    <item>$ local</item>
-                                    <item>$ what's on at</item>
-                                    </grammar>
-                                    <goto ref="output_2459418"/>
+                                        <grammar>
+                                        <item>Showtimes</item>
+                                        <item>$ showtimes</item>
+                                        <item>$ times</item>
+                                        <item>$ time</item>
+                                        <item>$ showing</item>
+                                        <item>$ near me</item>
+                                        <item>$ local</item>
+                                        <item>$ what's on at</item>
+                                        </grammar>
+                                        <goto ref="output_2459418"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>Recency and Genre</item>
-                                    <item>$ (RECENCY)={Recency_Preference} (GENRE)={Genre_Preference}</item>
-                                    <item>$ (GENRE)={Genre_Preference} (RECENCY)={Recency_Preference}</item>
-                                    <item>$ (RECENCY)={Recency_Preference} * (GENRE)={Genre_Preference}</item>
-                                    <item>$ (GENRE)={Genre_Preference} * (RECENCY)={Recency_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
-                                    <input>
-                                    <grammar>
-                                    <item>rating</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
-                                    <goto ref="profileCheck_2510320"/>
-                                    </input>
-                                    <if id="profileCheck_2510320">
-                                    <cond
-                                    varName="Genre_Preference" operator="EQUALS">Family</cond>
-                                    <goto ref="output_2456875">
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">G</action>
-                                    </goto>
-                                    </if>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>Recency and Rating</item>
-                                    <item>$ (RECENCY)={Recency_Preference} (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference} (RECENCY)={Recency_Preference}</item>
-                                    <item>$ (RECENCY)={Recency_Preference} * (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference} * (RECENCY)={Recency_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <input>
-                                    <grammar>
-                                    <item>genre</item>
-                                    <item>$ (GENRE)={Genre_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
-                                    <goto ref="goTo_2503053"/>
-                                    </input>
-                                    <goto id="goTo_2503053" ref="output_2456875"/>
+                                        <grammar>
+                                        <item>Recency and Genre</item>
+                                        <item>$ (RECENCY)={Recency_Preference} (GENRE)={Genre_Preference}</item>
+                                        <item>$ (GENRE)={Genre_Preference} (RECENCY)={Recency_Preference}</item>
+                                        <item>$ (RECENCY)={Recency_Preference} * (GENRE)={Genre_Preference}</item>
+                                        <item>$ (GENRE)={Genre_Preference} * (RECENCY)={Recency_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
+                                        <input>
+                                        <grammar>
+                                        <item>rating</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                                        <goto ref="profileCheck_2510320"/>
+                                        </input>
+                                        <if id="profileCheck_2510320">
+                                        <cond
+                                        varName="Genre_Preference" operator="EQUALS">Family</cond>
+                                        <goto ref="output_2456875">
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">G</action>
+                                        </goto>
+                                        </if>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>Genre and Rating</item>
-                                    <item>$ (GENRE)={Genre_Preference} (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference} (GENRE)={Genre_Preference}</item>
-                                    <item>$ (GENRE)={Genre_Preference} * (CERTIFICATION)={Certification_Preference}</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference} * (GENRE)={Genre_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <input>
-                                    <grammar>
-                                    <item>recency</item>
-                                    <item>$ (RECENCY)={Recency_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <goto ref="goTo_2503059"/>
+                                        <grammar>
+                                        <item>Recency and Rating</item>
+                                        <item>$ (RECENCY)={Recency_Preference} (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference} (RECENCY)={Recency_Preference}</item>
+                                        <item>$ (RECENCY)={Recency_Preference} * (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference} * (RECENCY)={Recency_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                                        <input>
+                                        <grammar>
+                                        <item>genre</item>
+                                        <item>$ (GENRE)={Genre_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
+                                        <goto ref="goTo_2503053"/>
+                                        </input>
+                                        <goto id="goTo_2503053" ref="output_2456875"/>
                                     </input>
-                                    <goto id="goTo_2503059" ref="output_2456875"/>
+                                    <input>
+                                        <grammar>
+                                        <item>Genre and Rating</item>
+                                        <item>$ (GENRE)={Genre_Preference} (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference} (GENRE)={Genre_Preference}</item>
+                                        <item>$ (GENRE)={Genre_Preference} * (CERTIFICATION)={Certification_Preference}</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference} * (GENRE)={Genre_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <input>
+                                        <grammar>
+                                        <item>recency</item>
+                                        <item>$ (RECENCY)={Recency_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                                        <goto ref="goTo_2503059"/>
+                                        </input>
+                                        <goto id="goTo_2503059" ref="output_2456875"/>
                                     </input>
                                     <input id="input_2531487">
-                                    <grammar>
-                                    <item>Recency</item>
-                                    <item>$ (RECENCY)={Recency_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <input>
-                                    <grammar>
-                                    <item>all</item>
-                                    <item>$ all</item>
-                                    <item>$ just</item>
-                                    <item>$ any</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO_BLANK"/>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO_BLANK"/>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>Genre</item>
-                                    <item>$ (GENRE)={Genre_Preference}</item>
-                                    <item>$ genre</item>
-                                    </grammar>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <input>
-                                    <grammar>
-                                    <item>all</item>
-                                    <item>$ all</item>
-                                    <item>$ just</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO_BLANK"/>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <if>
-                                    <cond
-                                    varName="Genre_Preference" operator="EQUALS">Family</cond>
-                                    <goto ref="output_2456875">
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">G</action>
-                                    </goto>
-                                    </if>
-                                    <goto ref="output_2456875"/>
+                                        <grammar>
+                                        <item>Recency</item>
+                                        <item>$ (RECENCY)={Recency_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <input>
+                                        <grammar>
+                                        <item>all</item>
+                                        <item>$ all</item>
+                                        <item>$ just</item>
+                                        <item>$ any</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO_BLANK"/>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                                        <goto ref="output_2456875"/>
+                                        </input>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>Rating</item>
-                                    <item>$ (CERTIFICATION)={Certification_Preference}</item>
-                                    </grammar>
-                                    <action
-                                    varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
-                                    <action
-                                    varName="Current_Index" operator="SET_TO">0</action>
-                                    <action varName="Page" operator="SET_TO">new</action>
-                                    <input>
-                                    <grammar>
-                                    <item>all</item>
-                                    <item>$ all</item>
-                                    <item>$ any</item>
-                                    </grammar>
-                                    <action
-                                    varName="Genre_Preference" operator="SET_TO_BLANK"/>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <input>
-                                    <grammar>
-                                    <item>I don't like these choices</item>
-                                    <item>$ don't like those</item>
-                                    <item>$ don't like these</item>
-                                    <item>$ don't like any of those</item>
-                                    <item>$ don't like any of these</item>
-                                    </grammar>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>I'm sorry to hear that. Try changing your criteria.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
+                                        <grammar>
+                                        <item>Genre</item>
+                                        <item>$ (GENRE)={Genre_Preference}</item>
+                                        <item>$ genre</item>
+                                        </grammar>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO">{Genre_Preference.value:main}</action>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <input>
+                                        <grammar>
+                                        <item>all</item>
+                                        <item>$ all</item>
+                                        <item>$ just</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO_BLANK"/>
+                                        <goto ref="output_2456875"/>
+                                        </input>
+                                        <if>
+                                        <cond
+                                        varName="Genre_Preference" operator="EQUALS">Family</cond>
+                                        <goto ref="output_2456875">
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">G</action>
+                                        </goto>
+                                        </if>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>$ (UNSUPPORTED_GENRES)={Topic}</item>
-                                    </grammar>
-                                    <action varName="Topic" operator="SET_TO">{Topic.value:main}</action>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>I'm afraid {Topic} isn't a movie genre I know. Please try another one.</item>
-                                    </prompt>
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
+                                        <grammar>
+                                        <item>Rating</item>
+                                        <item>$ (CERTIFICATION)={Certification_Preference}</item>
+                                        </grammar>
+                                        <action
+                                        varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
+                                        <action
+                                        varName="Current_Index" operator="SET_TO">0</action>
+                                        <action varName="Page" operator="SET_TO">new</action>
+                                        <input>
+                                        <grammar>
+                                        <item>all</item>
+                                        <item>$ all</item>
+                                        <item>$ any</item>
+                                        </grammar>
+                                        <action
+                                        varName="Genre_Preference" operator="SET_TO_BLANK"/>
+                                        <goto ref="output_2456875"/>
+                                        </input>
+                                        <goto ref="output_2456875"/>
                                     </input>
                                     <input>
-                                    <grammar>
-                                    <item>$ (DATE_TIME_RANGE)={DateTime_Mentioned_ENT}</item>
-                                    </grammar>
-                                    <action
-                                    varName="DateTime_Current" operator="SET_TO">&amp;lt;mct:getTime&amp;gt;America/Tijuana&amp;lt;/mct:getTime&amp;gt;</action>
-                                    <input>
-                                    <grammar>
-                                    <item>$ next</item>
-                                    </grammar>
-                                    <goto ref="profileCheck_2510175">
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">Upcoming</action>
-                                    </goto>
+                                        <grammar>
+                                        <item>I don't like these choices</item>
+                                        <item>$ don't like those</item>
+                                        <item>$ don't like these</item>
+                                        <item>$ don't like any of those</item>
+                                        <item>$ don't like any of these</item>
+                                        </grammar>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>I'm sorry to hear that. Try changing your criteria.</item>
+                                        </prompt>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
                                     </input>
-                                    <if id="profileCheck_2510175">
-                                    <cond
-                                    varName="Recency_Preference" operator="EQUALS">Upcoming</cond>
-                                    <goto ref="output_2456875"/>
-                                    </if>
-                                    <output>
-                                    <prompt/>
-                                    <function>
-                                    <script name="CalculateTimeDiff">Name=CalculateTimeDiff
+                                    <input>
+                                        <grammar>
+                                        <item>$ (UNSUPPORTED_GENRES)={Topic}</item>
+                                        </grammar>
+                                        <action varName="Topic" operator="SET_TO">{Topic.value:main}</action>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>I'm afraid {Topic} isn't a movie genre I know. Please try another one.</item>
+                                        </prompt>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
+                                    </input>
+                                    <input>
+                                        <grammar>
+                                        <item>$ (DATE_TIME_RANGE)={DateTime_Mentioned_ENT}</item>
+                                        </grammar>
+                                        <action
+                                        varName="DateTime_Current" operator="SET_TO">&amp;lt;mct:getTime&amp;gt;America/Tijuana&amp;lt;/mct:getTime&amp;gt;</action>
+                                        <input>
+                                        <grammar>
+                                        <item>$ next</item>
+                                        </grammar>
+                                        <goto ref="profileCheck_2510175">
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">Upcoming</action>
+                                        </goto>
+                                        </input>
+                                        <if id="profileCheck_2510175">
+                                        <cond
+                                        varName="Recency_Preference" operator="EQUALS">Upcoming</cond>
+                                        <goto ref="output_2456875"/>
+                                        </if>
+                                        <output>
+                                        <prompt/>
+                                        <function>
+                                        <script name="CalculateTimeDiff">Name=CalculateTimeDiff
 
-StartTime={DateTime_Current}
-EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
-                                    <output>
-                                    <prompt/>
-                                    <action
-                                    varName="DateTime_Difference" operator="SET_TO">{MCT:CUSTOM:CalculateTimeDiff:days}</action>
-                                    <if>
-                                    <cond
-                                    varName="DateTime_Difference" operator="LESS_THEN">1</cond>
-                                    <goto ref="output_2456875">
+                                            StartTime={DateTime_Current}
+                                            EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
+                                        <output>
+                                        <prompt/>
+                                        <action
+                                        varName="DateTime_Difference" operator="SET_TO">{MCT:CUSTOM:CalculateTimeDiff:days}</action>
+                                        <if>
+                                        <cond
+                                        varName="DateTime_Difference" operator="LESS_THEN">1</cond>
+                                        <goto ref="output_2456875">
 
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">Current</action>
-                                    </goto>
-                                    </if>
-                                    <goto ref="output_2456875">
-                                    <action
-                                    varName="Recency_Preference" operator="SET_TO">Upcoming</action>
-                                    </goto>
-                                    </output>
-                                    </function>
-                                    <goto ref="output_2456875"/>
-                                    </output>
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">Current</action>
+                                        </goto>
+                                        </if>
+                                        <goto ref="output_2456875">
+                                        <action
+                                        varName="Recency_Preference" operator="SET_TO">Upcoming</action>
+                                        </goto>
+                                        </output>
+                                        </function>
+                                        <goto ref="output_2456875"/>
+                                        </output>
                                     </input>
-                                    <input>
+
+                                    <!-- <input>
                                     <grammar>
                                     <item>again</item>
                                     <item>$ again</item>
                                     <item>$ one more time</item>
-                                    </grammar>
-                                    <action varName="Page" operator="SET_TO">repeat</action>
-                                    <goto ref="output_2456875"/>
-                                    </input>
-                                    <input>
-                                    <grammar>
                                     <item>more</item>
                                     <item>$ more</item>
                                     <item>$ next</item>
                                     <item>$ forward</item>
                                     </grammar>
-                                    <action
-                                    varName="Show_Next" operator="SET_TO_YES"/>
-                                    <action varName="Page" operator="SET_TO">next</action>
-                                    <output>
-                                    <prompt>
-                                    <item>Okay.</item>
-                                    </prompt>
-                                    <output>
-                                    <prompt selectionType="RANDOM">
-                                    <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Rating:"{Certification_Preference}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Total_Movies:"{Num_Movies}", Total_Pages:"{Total_Pages}"}"</item>
-                                    </prompt>
-                                    <action
-                                    varName="First_Results" operator="SET_TO_NO"/>
-                                    <getUserInput>
+                                    <action varName="Page" operator="SET_TO">repeat</action>
+                                    <goto ref="output_2456875"/>
+                                    </input>
+ -->
                                     <input>
-                                    <grammar>
-                                    <item>UPDATE CURRENT_INDEX</item>
-                                    </grammar>
-                                    <action
-                                    varName="Show_Next" operator="SET_TO_NO"/>
-                                    <action
-                                    varName="Show_Previous" operator="SET_TO_NO"/>
-                                    <if>
+                                        <grammar>
+                                        <item>more</item>
+                                        <item>$ more</item>
+                                        <item>$ next</item>
+                                        <item>$ forward</item>
+                                        </grammar>
+                                        <action
+                                        varName="Show_Next" operator="SET_TO_YES"/>
+                                        <action varName="Page" operator="SET_TO">next</action>
+                                        <output>
+                                        <prompt>
+                                        <item>Okay.</item>
+                                        </prompt>
+                                        <output>
+                                        <prompt selectionType="RANDOM">
+                                        <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Rating:"{Certification_Preference}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Total_Movies:"{Num_Movies}", Total_Pages:"{Total_Pages}"}"</item>
+                                        </prompt>
+                                        <action
+                                        varName="First_Results" operator="SET_TO_NO"/>
+                                        <getUserInput>
+                                        <input>
+                                        <grammar>
+                                        <item>UPDATE CURRENT_INDEX</item>
+                                        </grammar>
+                                        <action
+                                        varName="Show_Next" operator="SET_TO_NO"/>
+                                        <action
+                                        varName="Show_Previous" operator="SET_TO_NO"/>
+                                        <if>
 
-                                    <cond
-                                    varName="Num_Movies" operator="EQUALS">0</cond>
+                                        <cond
+                                        varName="Num_Movies" operator="EQUALS">0</cond>
 
-                                    <goto ref="output_2460234"/>
-                                    </if>
-                                    <if>
+                                        <goto ref="output_2460234"/>
+                                        </if>
+                                        <if>
 
-                                    <cond
-                                    varName="Index_Updated" operator="EQUAL_TO_NO"/>
-                                    <output>
-                                    <prompt>
-                                    <item>Those were the last results</item>
-                                    </prompt>
+                                        <cond
+                                        varName="Index_Updated" operator="EQUAL_TO_NO"/>
+                                        <output>
+                                        <prompt>
+                                        <item>Those were the last results</item>
+                                        </prompt>
 
-                                    <goto ref="profileCheck_2503183"/>
-                                    </output>
-                                    </if>
-                                    <if>
+                                        <goto ref="profileCheck_2503183"/>
+                                        </output>
+                                        </if>
+                                        <if>
 
-                                    <cond
-                                    varName="Current_Index" operator="EQUALS">{Num_Movies}</cond>
-                                    <output>
-                                    <prompt>
-                                    <item>Here are the last results</item>
-                                    </prompt>
+                                        <cond
+                                        varName="Current_Index" operator="EQUALS">{Num_Movies}</cond>
+                                        <output>
+                                        <prompt>
+                                        <item>Here are the last results</item>
+                                        </prompt>
 
-                                    <action
-                                    varName="Last_Results" operator="SET_TO_YES"/>
+                                        <action
+                                        varName="Last_Results" operator="SET_TO_YES"/>
 
-                                    <goto ref="profileCheck_2503183"/>
-                                    </output>
-                                    </if>
-                                    <output>
+                                        <goto ref="profileCheck_2503183"/>
+                                        </output>
+                                        </if>
+                                        <output>
 
-                                    <prompt selectionType="RANDOM">
-                                    <item>Here is the next set of results</item>
-                                    </prompt>
-                                    <if id="profileCheck_2503183">
+                                        <prompt selectionType="RANDOM">
+                                        <item>Here is the next set of results</item>
+                                        </prompt>
+                                        <if id="profileCheck_2503183">
 
-                                    <cond
-                                    varName="Genre_Preference" operator="IS_BLANK"/>
+                                        <cond
+                                        varName="Genre_Preference" operator="IS_BLANK"/>
 
-                                    <cond
-                                    varName="Certification_Preference" operator="HAS_VALUE"/>
-                                    <output>
-                                    <prompt>
-                                    <item>for {Recency_Preference} {Certification_Preference}-rated movies.</item>
-                                    </prompt>
+                                        <cond
+                                        varName="Certification_Preference" operator="HAS_VALUE"/>
+                                        <output>
+                                        <prompt>
+                                        <item>for {Recency_Preference} {Certification_Preference}-rated movies.</item>
+                                        </prompt>
 
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </if>
-                                    <if>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
+                                        </if>
+                                        <if>
 
-                                    <cond
-                                    varName="Certification_Preference" operator="IS_BLANK"/>
+                                        <cond
+                                        varName="Certification_Preference" operator="IS_BLANK"/>
 
-                                    <cond
-                                    varName="Genre_Preference" operator="HAS_VALUE"/>
-                                    <output>
-                                    <prompt>
-                                    <item>for {Recency_Preference} {Genre_Preference} movies.</item>
-                                    </prompt>
+                                        <cond
+                                        varName="Genre_Preference" operator="HAS_VALUE"/>
+                                        <output>
+                                        <prompt>
+                                        <item>for {Recency_Preference} {Genre_Preference} movies.</item>
+                                        </prompt>
 
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </if>
-                                    <if>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
+                                        </if>
+                                        <if>
 
-                                    <cond
-                                    varName="Certification_Preference" operator="IS_BLANK"/>
+                                        <cond
+                                        varName="Certification_Preference" operator="IS_BLANK"/>
 
-                                    <cond
-                                    varName="Genre_Preference" operator="IS_BLANK"/>
-                                    <output>
-                                    <prompt>
-                                    <item>for ALL {Recency_Preference} movies.</item>
-                                    </prompt>
+                                        <cond
+                                        varName="Genre_Preference" operator="IS_BLANK"/>
+                                        <output>
+                                        <prompt>
+                                        <item>for ALL {Recency_Preference} movies.</item>
+                                        </prompt>
 
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </if>
-                                    <output>
-                                    <prompt>
-                                    <item>for {Recency_Preference} {Certification_Preference}-rated {Genre_Preference} movies.</item>
-                                    </prompt>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
+                                        </if>
+                                        <output>
+                                        <prompt>
+                                        <item>for {Recency_Preference} {Certification_Preference}-rated {Genre_Preference} movies.</item>
+                                        </prompt>
 
-                                    <goto ref="getUserInput_2456877"/>
-                                    </output>
-                                    </output>
+                                        <goto ref="getUserInput_2456877"/>
+                                        </output>
+                                        </output>
+                                        </input>
+                                        </getUserInput>
+                                        </output>
+                                        </output>
                                     </input>
-                                    </getUserInput>
-                                    </output>
-                                    </output>
-                                    </input>
+
                                     <input>
                                     <grammar>
                                     <item>Go back</item>
@@ -2671,6 +2855,9 @@ EndTime={DateTime_Mentioned_ENT.value:FROM_FULL}</script>
                                     </getUserInput>
                                     </output>
                                 </input>
+
+                                <goto ref="search_2414738"/>
+
                             </getUserInput>
                         </output>
                     </output>
@@ -5288,6 +5475,9 @@ border-color:#000000;
 
                 <!-- <var name="Cast_Name" type="TEXT" initValue="Xavier"/> -->
                 <var name="Cast_Name" type="TEXT" initValue=""/>
+                <var name="Cast_Name_2" type="TEXT" initValue=""/>
+                <var name="Director_Name" type="TEXT" initValue=""/>
+
                 <var name="Release_Year" type="NUMBER" initValue="" description="Year of Release for the movie."/>
                 <var name="Vote_Rating" type="NUMBER" initValue="" description="MovieDB Rating for the movie."/>
 
@@ -5314,6 +5504,9 @@ border-color:#000000;
                 <var name="Selected_Movie" type="TEXT"/>
                 <var name="ZIP_Code_Preference" type="TEXT" description="User&amp;apos;s indicated ZIP code"/>
                 <var name="Index_Updated" type="YESNO" initValue="Yes"/>
+
+                <var name="No_Of_Movies" type="YESNO" initValue="No"/>
+
             </var_folder>
             <var name="DateTime_Difference" type="NUMBER"/>
             <var name="DateTime_Mentioned_ENT" type="TEXT"/>

@@ -158,7 +158,8 @@ function getActorById(name){
         else
           return callback(null, "");        
 
-      });     
+      });
+
     },
 
     /**
@@ -166,38 +167,50 @@ function getActorById(name){
      * by the user during the dialog
      */
      
-    searchMovies: function(params, actor_id, callback) {
-      console.log("actorId: " + actor_id);      
+    searchMovies: function(params, actor_id, actor_second_id, director_id, callback) {
+      console.log(params);      
       console.log("typeof params.release_year: " + params.release_year + " " 
         + Number.isNaN(Number(params.release_year)));
       console.log("typeof params.vote_rating: " + params.vote_rating + " " 
         + Number.isNaN(Number(params.vote_rating)));
 
+      var query = {};
+
       if (params.release_year !== "")
       {
-        var query = {
-          sort_by: 'popularity.desc',
-          primary_release_year: params.release_year
-
-        }; 
+          query = {
+            sort_by: 'popularity.desc',
+            primary_release_year: params.release_year
+          }; 
       }
-      else /*if (!params.release_year !== "")*/
+      else if (params.recency !== "")
       {        
         var today = moment().format('YYYY-MM-DD');
         var lastMonth = moment().month(-1).format('YYYY-MM-DD');
         var next6Months = moment().month(6).format('YYYY-MM-DD');
 
-        var query = {
-          sort_by: 'popularity.desc',
-          'primary_release_date.gte': (params.recency === 'current' ?  lastMonth : today),
-          'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)         
-        };
+          query = {
+            sort_by: 'popularity.desc',
+            'primary_release_date.gte': (params.recency === 'current' ?  lastMonth : today),
+            'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)         
+          };
       }
 
-      //Search By Actor Name
-      if(actor_id !== "")
+      //Search By Two Actor Name
+      if(actor_id !== "" && actor_second_id !== "")
+      {
+        query.with_cast = actor_id + "," + actor_second_id;
+      }
+      //Search By Single Actor Name
+      else if(actor_id !== "")
       {
         query.with_cast = actor_id;
+      }
+
+      //Search By Director Name
+      if (director_id !== "") 
+      {
+        query.with_crew = director_id;
       }
 
       //Search By Vote Rating More Than The Specified Value
@@ -244,8 +257,11 @@ function getActorById(name){
           total_pages: body.total_pages,
           total_movies: body.total_results,
           movies: top10movies,
-          curent_index: params.index + top10movies.length
+          curent_index: params.index + top10movies.length,
+          no_of_movies: params.noofmovies
         };
+       /* if(params.noofmovies == 'yes')
+          console.log(params.noofmovies);*/
         return callback(null, results);
       });
     },

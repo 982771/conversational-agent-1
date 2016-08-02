@@ -117,6 +117,8 @@
                conversation_id: conversationId,
                input: question
              }).then(function (response) {
+                  console.log('dialog-service response--------------------------');
+                  console.log(response.data);  
                  var watsonResponse = response.data.response.join(' ');
                  var movies = null, htmlLinks = null, transformedPayload = null;
                  var segment = null;
@@ -129,7 +131,7 @@
                      //inconsistencies in the API and how it handles new lines
                      watsonResponse = watsonResponse.replace(/\n+/g, '<br/>');
                  }
-                 if ($.isArray(response.data.movies)) {
+                 if ($.isArray(response.data.movies) && response.data.no_of_movies === 'no') {
                      movies = response.data.movies;
                  }
                  if (!watsonResponse) {

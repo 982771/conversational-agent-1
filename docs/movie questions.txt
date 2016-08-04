@@ -28,6 +28,23 @@ number of movies by shahrukh khan released in 2014.
 number of movies directed by yash chopra and casted by shahrukh khan
 
 
+count of movies directed by rohit shetty and casted by ajay devgan
+
+movies directed by rohit shetty in 2016
+
+number of movies by shahrukh khan released in 2014 in genre comedy
+
+comedy movies by salman khan in 2016
+
+movies with karan johar and shahrukh khan
+
+movies by shahrukh khan directed by karan johar
+
+comedy movies by shahrukh khan
+
+action movies by salman khan with more than 7 rating
+
+
 More questions
 
 

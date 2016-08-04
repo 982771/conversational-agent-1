@@ -896,6 +896,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         <item>$ in (DYNAMIC_DATA)={Release_Year} directed</item>
                         <item>$ in (DYNAMIC_DATA)={Release_Year} in</item>
                         <item>$ in (DYNAMIC_DATA)={Release_Year}</item>
+
+                        <item>$ (DYNAMIC_DATA)={Movie_Title}</item>
                     </grammar>
                     <action varName="Topic" operator="SET_TO">movies</action>
                     <action varName="Greeting_Count" operator="SET_TO">0</action>
@@ -908,6 +910,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                     <action varName="Recency_Preference" operator="SET_TO">{Recency_Preference.value:main}</action>
                     <action varName="Release_Year" operator="SET_TO">{Release_Year.source}</action>
                     <!-- <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action> -->
+                    <action varName="Movie_Title" operator="SET_TO">{Movie_Title.source}</action>
                     <action varName="Node_Class" operator="SET_TO">movies</action>
                     <action varName="Defaulted_Previous" operator="SET_TO_NO"/>                        
                     <input id="input_2503411">
@@ -954,9 +957,25 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </goto>
                                 </output>
                             </function>
-                            <goto ref="input_2510385"/>
+                            <goto ref="input_2510386"/>
                         </output>
                     </input>
+
+
+                    <input id="input_2510386">
+                        <grammar>
+                            <item>$ (DYNAMIC_DATA)={Movie_Title}</item>
+                        </grammar>
+                        <action varName="Movie_Title" operator="SET_TO">{Movie_Title.source}</action>
+                        <action varName="Node_Class" operator="SET_TO">movies</action>
+                        <!-- <output>
+                            <prompt>
+                                <item>{Movie_Title}</item>
+                            </prompt>
+                        </output> -->
+                        <goto ref="input_2510385"/>
+                    </input>
+
 
                     <input id="input_2510385">
                         <grammar>
@@ -964,7 +983,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>Number of *</item>
                             <item>Number of movies</item>
                             <item>$ Number</item>
-                            <item>$ Count</item>
+                            <item>$ Count</item>                                    
+
                         </grammar>
                         <action varName="No_Of_Movies" operator="SET_TO">Yes</action>
                         <goto ref="input_2443775"/>
@@ -1014,6 +1034,8 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ having (DYNAMIC_DATA)={Vote_Rating} </item> -->
                             <item>$ with rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
                             <item>$ rating greater than (DYNAMIC_DATA)={Vote_Rating}</item>
+
+                            <item>$ (DYNAMIC_DATA)={Movie_Title}</item>
 
                         </grammar>
                         <action varName="Certification_Preference" operator="SET_TO">{Certification_Preference.value:main}</action>
@@ -1090,7 +1112,9 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ released in (DYNAMIC_DATA)={Release_Year} having</item>
                             <item>$ released in (DYNAMIC_DATA)={Release_Year} in</item>
                             <item>$ released in (DYNAMIC_DATA)={Release_Year}</item>
-                            
+
+                            <item>$ (DYNAMIC_DATA)={Movie_Title}</item>
+
                             <!-- <item>$ movies in (DYNAMIC_DATA)={Release_Year}</item> -->
                         </grammar>
                         <action varName="Node_Class" operator="SET_TO">movies</action>
@@ -1179,6 +1203,9 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
 
                             <item>$ movies released in * with</item>
                             <item>$ movies released in * having</item>
+
+                            <item>$ (DYNAMIC_DATA)={Movie_Title}</item>
+
                         </grammar>
                         <action varName="Cast_Name" operator="SET_TO">{Cast_Name.source}</action>
                         <action varName="Cast_Name_2" operator="SET_TO">{Cast_Name_2.source}</action>
@@ -1860,7 +1887,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                         </prompt>
                         <output id="output_2456876">
                             <prompt selectionType="RANDOM">
-                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Vote_Rating:"{Vote_Rating}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}", Actor_2:"{Cast_Name_2}", Director:"{Director_Name}", NoOfMovies:"{No_Of_Movies}"}"</item> 
+                                <item>"{Search_Now:"{Search_Now}", Recency:"{Recency_Preference}", Release_Year:"{Release_Year}", Rating:"{Certification_Preference}", Vote_Rating:"{Vote_Rating}", Genre:"{Genre_Preference}", Index:"{Current_Index}", Page:"{Page}", Actor:"{Cast_Name}", Actor_2:"{Cast_Name_2}", Director:"{Director_Name}", NoOfMovies:"{No_Of_Movies}", Movie_Title:"{Movie_Title.source}"}"</item> 
                             </prompt>
                             <action varName="Last_Results" operator="SET_TO_NO"/>
                             <action varName="First_Results" operator="SET_TO_NO"/>
@@ -1871,6 +1898,20 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <grammar>
                                     <item>UPDATE NUM_MOVIES</item>
                                     </grammar>
+
+                                    <if>
+                                    <cond varName="Wrong_Actor" operator="EQUALS">Yes</cond>
+                                    <output id="output_2460237">
+                                    <prompt selectionType="RANDOM">
+                                    <item>You have entered the wrong details.Please fill the correct details and try again</item>
+                                    </prompt>
+                                    <getUserInput>
+        
+                                    <!-- <goto ref="input_2460509"/> -->
+                                    <goto ref="search_2414738"/>
+                                    </getUserInput>
+                                    </output>
+                                    </if>
 
                                     <if>
                                     <cond varName="No_Of_Movies" operator="EQUALS">Yes</cond>
@@ -1931,6 +1972,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </getUserInput>
                                     </output>
                                     </if>
+
                                     <if>
                                     <cond
                                     varName="Certification_Preference" operator="HAS_VALUE"/>
@@ -5477,6 +5519,7 @@ border-color:#000000;
                 <var name="Cast_Name" type="TEXT" initValue=""/>
                 <var name="Cast_Name_2" type="TEXT" initValue=""/>
                 <var name="Director_Name" type="TEXT" initValue=""/>
+                <var name="Movie_Title" type="TEXT" initValue=""/>
 
                 <var name="Release_Year" type="NUMBER" initValue="" description="Year of Release for the movie."/>
                 <var name="Vote_Rating" type="NUMBER" initValue="" description="MovieDB Rating for the movie."/>
@@ -5506,6 +5549,8 @@ border-color:#000000;
                 <var name="Index_Updated" type="YESNO" initValue="Yes"/>
 
                 <var name="No_Of_Movies" type="YESNO" initValue="No"/>
+
+                <var name="Wrong_Actor" type="YESNO" initValue="No"/>
 
             </var_folder>
             <var name="DateTime_Difference" type="NUMBER"/>

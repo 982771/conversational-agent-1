@@ -26,6 +26,7 @@ var GENRE_URL = 'http://api.themoviedb.org/3/genre/movie/list';
 var POSTER_BASE_URL = 'http://image.tmdb.org/t/p/w300/';
 var YOUTUBE_TRAILER_URL = 'https://www.youtube.com/embed/%s?controls=0&amp;showinfo=0';
 var ACTOR_URL = 'http://api.tmdb.org/3/search/person';
+var MOVIE_TITLE_URL = 'http://api.tmdb.org/3/search/movie';
 var TMDB_PAGE_SIZE = 20;
 var RESULT_SIZE = 10;
 
@@ -162,12 +163,45 @@ function getActorById(name){
 
     },
 
+
+    /*Function To Get Movie Details By Providing Movie Name
+    */
+    searchMovieDetails: function(params, callback){
+
+      var movie_title_query = { query : params};
+      var movie_details = "";
+
+      tmdbRequest({ url: MOVIE_TITLE_URL, qs: movie_title_query, json:true }, function(err, res, body) {
+        if (err)
+          return callback(err);
+
+        if (body.results !== null && body.results !== undefined)
+        {
+          if (body.results[0] !== null && body.results[0] !== undefined)
+          {
+            movie_details = body.results[0];
+          
+            return callback(null, movie_details);        
+          }
+          else
+            return callback(null, "");        
+        }
+        else
+          return callback(null, "");        
+
+      });
+
+    },
+
+
+
     /**
      * Search for movies based on the parameters provided
      * by the user during the dialog
      */
      
     searchMovies: function(params, actor_id, actor_second_id, director_id, callback) {
+      var wrongActor = "NO";
       console.log(params);      
       console.log("typeof params.release_year: " + params.release_year + " " 
         + Number.isNaN(Number(params.release_year)));
@@ -195,6 +229,15 @@ function getActorById(name){
             'primary_release_date.lte': (params.recency === 'current' ?  today : next6Months)         
           };
       }
+
+      console.log("actor_id: " + actor_id + " params.actor: " + params.actor + " actor_second_id: " + " actor_second_id: " + actor_second_id + " params.actor_2: " + params.actor_2 + " director_id: " + director_id + " params.director: " + params.director);
+
+      if((actor_id === "" && params.actor !== "") || (actor_second_id === "" && params.actor_2 !== "") || (director_id === "" && params.director !== ""))
+      {
+        wrongActor = "YES";
+      }
+
+      console.log("wrongActor:" + wrongActor);
 
       //Search By Two Actor Name
       if(actor_id !== "" && actor_second_id !== "")
@@ -258,7 +301,8 @@ function getActorById(name){
           total_movies: body.total_results,
           movies: top10movies,
           curent_index: params.index + top10movies.length,
-          no_of_movies: params.noofmovies
+          no_of_movies: params.noofmovies,
+          wrong_actor : wrongActor
         };
        /* if(params.noofmovies == 'yes')
           console.log(params.noofmovies);*/

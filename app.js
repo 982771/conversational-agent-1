@@ -35,7 +35,7 @@ var log = console.log.bind(null, '  ');
 var apis = null;
 
 // promises
-var converse, updateProfile, getIntent, searchMovies, getMovieInformation, searchActorId = null;
+var converse, updateProfile, getIntent, searchMovies, getMovieInformation, searchActorId, searchMovieDetails = null;
 
 // train the service and create the promises with the result
 training.train(function(err) {
@@ -50,6 +50,7 @@ training.train(function(err) {
   getIntent = Q.nfbind(apis.classifier.classify.bind(apis.classifier));
   searchMovies = Q.nfbind(apis.movieDB.searchMovies.bind(apis.movieDB));
   searchActorId = Q.nfbind(apis.movieDB.searchActorId.bind(apis.movieDB));  
+  searchMovieDetails = Q.nfbind(apis.movieDB.searchMovieDetails.bind(apis.movieDB));
   getMovieInformation = Q.nfbind(apis.movieDB.getMovieInformation.bind(apis.movieDB));
 });
 
@@ -100,42 +101,48 @@ app.post('/api/conversation', function(req, res, next) {
         var searchParameters = parseSearchParameters(conversation);
         conversation.response = conversation.response.slice(0, 1);
 
-        return searchActorId(searchParameters.actor)
-        .then(function(actorIdResult){
-            console.log("actorId: " + actorIdResult);  
-            return searchActorId(searchParameters.actor_2)
-            .then(function(actorIdSecondResult){   
-                console.log("actorIdSecondResult: " + actorIdSecondResult);
-                return searchActorId(searchParameters.director)
-                .then(function(directorIdResult){
-                    console.log("directorIdResult: " + directorIdResult);
-                    log('6. searching for movies in themoviedb.com');
-                    return searchMovies(searchParameters,actorIdResult,actorIdSecondResult,directorIdResult)
-                    .then(function(searchResult) {
-                      console.log('---------------Movie Search Results------------------------');
-                        console.log(searchResult.movies);
+        return searchMovieDetails(searchParameters.movie_title)
+        .then(function(movieTitleResult){    
+            console.log("movieTitleResult: ");
+            console.log(movieTitleResult);  
+            return searchActorId(searchParameters.actor)
+            .then(function(actorIdResult){
+                console.log("actorId: " + actorIdResult);  
+                return searchActorId(searchParameters.actor_2)
+                .then(function(actorIdSecondResult){   
+                    console.log("actorIdSecondResult: " + actorIdSecondResult);
+                    return searchActorId(searchParameters.director)
+                    .then(function(directorIdResult){
+                        console.log("directorIdResult: " + directorIdResult);
+                        log('6. searching for movies in themoviedb.com');
+                        return searchMovies(searchParameters,actorIdResult,actorIdSecondResult,directorIdResult)
+                        .then(function(searchResult) {
+                          console.log('---------------Movie Search Results------------------------');
+                            console.log(searchResult.movies);
 
-                        log('7. updating the dialog profile with the result from themoviedb.com');
-                        var profile = {
-                          client_id: req.body.client_id,
-                          name_values: [
-                            { name:'Current_Index', value: searchResult.curent_index },
-                            { name:'Total_Pages', value: searchResult.total_pages },
-                            { name:'Num_Movies', value: searchResult.total_movies }
-                          ]
-                        };
-                        return updateProfile(profile)
-                        .then(function() {
-                            log('8. calling dialog.conversation()');
-                            var params = extend({}, req.body);
-                            if (['new','repeat'].indexOf(searchParameters.page) !== -1)
-                              params.input = PROMPT_MOVIES_RETURNED;
-                            else
-                              params.input = PROMPT_CURRENT_INDEX;
+                            log('7. updating the dialog profile with the result from themoviedb.com');
+                            var profile = {
+                              client_id: req.body.client_id,
+                              name_values: [
+                                { name:'Current_Index', value: searchResult.curent_index },
+                                { name:'Total_Pages', value: searchResult.total_pages },
+                                { name:'Num_Movies', value: searchResult.total_movies },
+                                { name:'Wrong_Actor', value: searchResult.wrong_actor }
+                              ]
+                            };
+                            return updateProfile(profile)
+                            .then(function() {
+                                log('8. calling dialog.conversation()');
+                                var params = extend({}, req.body);
+                                if (['new','repeat'].indexOf(searchParameters.page) !== -1)
+                                  params.input = PROMPT_MOVIES_RETURNED;
+                                else
+                                  params.input = PROMPT_CURRENT_INDEX;
 
-                            return converse(params)
-                            .then(function(result) {
-                                res.json(extend(result[0], searchResult));
+                                return converse(params)
+                                .then(function(result) {
+                                    res.json(extend(result[0], searchResult));
+                                });
                             });
                         });
                     });

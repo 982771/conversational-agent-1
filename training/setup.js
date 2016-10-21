@@ -35,7 +35,7 @@ var dialogTrainingFile = __dirname + '/dialog_and_classifier.xml';
 var classifierTrainingFile = __dirname + '/classifier_training.csv';
 
 var dialogService = watson.dialog({
-  url: 'https://gateway.watsonplatform.net/dialog/api',
+  url: 'https://gateway.watsonplatform.net/conversation/api',
   username: 'USERNAME',
   password: 'PASSWORD',
   version: 'v1'

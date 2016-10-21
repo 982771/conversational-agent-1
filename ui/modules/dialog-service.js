@@ -131,7 +131,7 @@
                      //inconsistencies in the API and how it handles new lines
                      watsonResponse = watsonResponse.replace(/\n+/g, '<br/>');
                  }
-                 if ($.isArray(response.data.movies) && response.data.no_of_movies === 'no') {
+                 if ($.isArray(response.data.movies) && response.data.no_of_movies === 'no' && response.data.wrong_actor === 'NO') {
                      movies = response.data.movies;
                  }
                  if (!watsonResponse) {

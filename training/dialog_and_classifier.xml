@@ -1176,6 +1176,10 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ directed by (DYNAMIC_DATA)={Director_Name} and starred by (DYNAMIC_DATA)={Cast_Name}</item>
                             <item>$ directed by (DYNAMIC_DATA)={Director_Name} in</item>
                             <item>$ directed by (DYNAMIC_DATA)={Director_Name}</item>
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} and directed by</item>
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} &amp; directed by</item>
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name} , directed by</item>
+                            <item>$ By (DYNAMIC_DATA)={Cast_Name}, directed by</item>
                             <item>$ By (DYNAMIC_DATA)={Cast_Name} directed by</item>
 
 
@@ -1196,8 +1200,22 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                             <item>$ which (DYNAMIC_DATA)={Cast_Name} &amp; (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
                             <item>$ which (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
                             <item>$ which (DYNAMIC_DATA)={Cast_Name} , (DYNAMIC_DATA)={Cast_Name_2} have worked together</item>
+
+                            <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} in * having</item>
+                            <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} in * having</item>
+
+                            <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} having * in</item>
+                            <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} having * in</item>
+
+                            <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} having</item>
+                            <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} having</item>
+
+                            <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} in</item>
+                            <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2} in</item>
+                            
                             <item>$ with (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
                             <item>$ by (DYNAMIC_DATA)={Cast_Name} and (DYNAMIC_DATA)={Cast_Name_2}</item>
+                            
                             <item>$ movies in * with</item>
                             <item>$ movies in * having</item>
 
@@ -1903,7 +1921,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     <cond varName="Wrong_Actor" operator="EQUALS">Yes</cond>
                                     <output id="output_2460237">
                                     <prompt selectionType="RANDOM">
-                                    <item>You have entered the wrong details.Please fill the correct details and try again</item>
+                                    <item>You seem to have entered some wrong details. Please try to fill correct details and search again.</item>
                                     </prompt>
                                     <getUserInput>
         
@@ -1931,7 +1949,7 @@ Line={Class1_Confidence}+{Class2_Confidence};</script>
                                     </if>
                                     <output id="output_2460235">
                                     <prompt selectionType="RANDOM">
-                                    <item> I found {Num_Movies} number of movies matching your criteria.</item>
+                                    <item>{Num_Movies}</item>
                                     </prompt>
                                     <getUserInput>
                                     <action varName="No_Of_Movies" operator="SET_TO_NO"/>
